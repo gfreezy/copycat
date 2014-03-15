@@ -1,0 +1,28 @@
+{% extends 'common/content_layout.html' %}
+{% import 'common/topics.html' as topics_util %}
+
+{% block main %}
+<div class="topics container-box node-topics">
+    <div class="ui-header">
+        <a class="btn btn-small fr" type="button" href="{{ url('new_topic', node.slug) }}">创建新主题</a>
+        <span class="bread-nav">F2E › {{ node.name }}</span>
+    </div>
+
+    <div class="ui-content">
+        {{ topics_util.list(page.object_list) }}
+
+        {% if page.paginator.count == 0 %}
+        <div class="pl10 pr10">
+            <div class="alert mt20 no-topics">
+                该结点下暂时还没有主题，发出你的讨论吧。
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="ui-footer">
+      {{ page|paginate }}
+    </div>
+</div>
+{% endblock %}
+

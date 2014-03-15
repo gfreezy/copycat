@@ -1,0 +1,40 @@
+{% macro list(topics) -%}
+<div class="topics container-box deprecated-mt10">
+    {% for topic in topics %}
+    <div class="topic-item">
+        <a href="{{ url('user', name=topic.author.get_username()) }}">
+            <img src="{{ topic.author.profile.avatar.small.url }}" alt="{{ topic.author.get_username() }}" class="avatar"/>
+        </a>
+
+        <div class="main">
+            <h3 class="title">
+                <a href="{{ url('topic', id=topic.id) }}">{{ topic.title }}</a>
+            </h3>
+
+            <div class="meta">
+                <span class="node"><a href="{{ url('node', topic.node.slug) }}">{{ topic.node.name }}</a></span> •
+                        <span class="username">
+                            <a href="{{ url('user', topic.author.get_username()) }}">{{ topic.author.get_username() }}</a>
+                        </span> •
+                {% set latest_reply = topic.reply_set.last() %}
+                {% if latest_reply %}
+                <span class="last-touched">{{ latest_reply.created | human_date }}</span> •
+                            <span class="last-reply-username">最后回复来自
+                                <a href="{{ url('user', latest_reply.author.get_username()) }}">
+                                    <strong>{{ latest_reply.author.get_username() }}</strong>
+                                </a>
+                            </span>
+                {% else %}
+                <span class="last-touched">{{ topic.author.get_username() }}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% if topic.reply_count %}
+        <div class="count">
+            <a href="{{ url('topic', topic.id) }}">{{ topic.reply_count }}</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{%- endmacro %}

@@ -1,0 +1,23 @@
+{%  if page.has_other_pages() %}
+<div class="pagination pagination-mini">
+    <ul>
+        {% if page.has_previous() %}
+        <li><a href="{{ url_pattern % page.previous_page_number() }}">«</a></li>
+        {% endif %}
+
+        {% for p in page_list %}
+            <li {% if page.number == p %}class="active"{% endif %}>
+                {% if not page.number == p %}
+                    <a href="{{ url_pattern % p }}">{{ p }}</a>
+                {% else %}
+                    <a href="javascript:;">{{ p }}</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+
+        {% if page.has_next() %}
+        <li><a href="{{ url_pattern % page.next_page_number() }}">»</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
