@@ -1,0 +1,101 @@
+{% extends 'common/content_layout.html' %}
+{% import 'common/topics.html' as topics_util %}
+
+{% block main %}
+<div class="topics container-box mt10">
+    {{topics_util.topics(hot_topics)}}
+</div>
+
+<div class="nodes-cloud container-box mt10">
+    <h4 class="title">
+        <span class="octicon octicon-globe"></span>
+        常见节点导航
+    </h4>
+    <ul>
+        {% for plane in planes %}
+        <li>
+            <label>{{ plane.name }}</label>
+            <span class="nodes">
+                {% for node in plane.node_set.all() %}
+                    <a href="{{ url('node', node.slug) }}">{{ node.name }}</a>
+                {% endfor %}
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{{ super() }}
+
+<div class="sidebox container-box mt10 weixin">
+    <div class="ui-header">
+        <span class="title">微信公共帐号</span>
+    </div>
+    <div class="ui-content">
+        <img src="/static/images/qrcode_for_gh_81ac76ebf8e3_258.jpg" alt=""/>
+    </div>
+</div>
+
+<div class="sidebox container-box mt10 hot-nodes">
+    <div class="ui-header">
+        <span class="title">最热节点</span>
+    </div>
+    <div class="ui-content">
+        {% for node in hot_nodes %}
+        <a href="/node/{{ node.slug }}">{{ node.name }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="sidebox container-box mt10 friends">
+    <div class="ui-header">
+        <span class="title">友情社区</span>
+    </div>
+    <div class="ui-content">
+        <p><a href="http://python-china.org"><img src="/static/images/python_china_logo.jpg" alt=""/></a></p>
+
+        <p><a href="http://ruby-china.org"><img src="/static/images/ruby_china_logo.png" alt=""/></a></p>
+
+        <p><a href="http://trans4fun.org"><img src="/static/images/trans4fun.png" alt=""/></a></p>
+
+        <p><a href="http://www.ubuntusoft.com"><img src="/static/images/ubuntusoft.png" alt=""
+                                                    style="width:190px;"/></a></p>
+    </div>
+</div>
+
+<div class="sidebox container-box mt10 friends">
+    <div class="ui-header">
+        <span class="title">我们的标志</span>
+    </div>
+    <div class="ui-content">
+        <p><a href="http://f2e.im"><img src="/static/images/f2e.im.logo.png" alt=""/></a></p>
+    </div>
+</div>
+
+<div class="sidebox container-box mt10 community-status">
+    <div class="ui-header">
+        <span class="title">运行状态</span>
+    </div>
+    <div class="ui-content">
+        <dl>
+            <dt>注册成员</dt>
+            <dd>{{ total_users }}</dd>
+        </dl>
+        <dl>
+            <dt>节点</dt>
+            <dd>{{ total_nodes }}</dd>
+        </dl>
+        <dl>
+            <dt>主题</dt>
+            <dd>{{ total_topics }}</dd>
+        </dl>
+        <dl>
+            <dt>回复</dt>
+            <dd>{{ total_replies }}</dd>
+        </dl>
+    </div>
+</div>
+</div>
+{% endblock %}

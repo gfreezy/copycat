@@ -1,108 +1,49 @@
-{% extends 'common/content_layout.html' %}
-{% import 'common/topics.html' as topics_util %}
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <title>{% block title %}F2E - 前端技术社区{% endblock %}</title>
+    <script type="text/javascript" src="/static/js/base/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/base/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/base/in-min.js"></script>
+    <script type="text/javascript" src="/static/js/base/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.min.css"/>
+    {% compressed_css 'main' %}
+    <link rel="apple-touch-icon" href="/static/images/f2e.im.icon.png">
+</head>
+<body>
 
-{% block main %}
-<ul class="news container-box">
-    <li><a href="#">HTML5(目前)无法帮你实现的五件事</a></li>
-    <li><a href="#">DNS优化的原理和方法</a></li>
-    <li><a href="#">浅谈互联网产品前期设计方法</a></li>
-    <li><a href="#">如何在Google成为优秀的产品经理?</a></li>
-    <li><a href="#">页面前端的水有多深？</a></li>
-    <li><a href="#">如何利用互联网工具调研网站</a></li>
-</ul>
+<div class="navbar navbar-inverse navbar-fixed-top top-navbar">
+    <div class="navbar-inner">
 
-{{topics_util.list(topics)}}
-
-<div class="nodes-cloud container-box mt10">
-    <h4 class="title">
-        <span class="octicon octicon-globe"></span>
-        常见节点导航
-    </h4>
-    <ul>
-        {% for plane in planes %}
-        <li>
-            <label>{{ plane.name }}</label>
-            <span class="nodes">
-                {% for node in plane.node_set.all() %}
-                    <a href="{{ url('node', node.slug) }}">{{ node.name }}</a>
-                {% endfor %}
-            </span>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
-{% endblock %}
-
-{% block sidebar %}
-{{ super() }}
-
-<div class="sidebox container-box mt10 weixin">
-    <div class="ui-header">
-        <span class="title">微信公共帐号</span>
-    </div>
-    <div class="ui-content">
-        <img src="/static/images/qrcode_for_gh_81ac76ebf8e3_258.jpg" alt=""/>
     </div>
 </div>
 
-<div class="sidebox container-box mt10 hot-nodes">
-    <div class="ui-header">
-        <span class="title">最热节点</span>
-    </div>
-    <div class="ui-content">
-        {% for node in hot_nodes %}
-        <a href="/node/{{ node.slug }}">{{ node.name }}</a>
-        {% endfor %}
+<div class="container-fluid container mt15">
+    {{ messages|dump_messages }}
+    {% if form %}
+        {{form.errors|dump_errors}}
+    {% endif %}
+    {% block messages %}
+
+    {% endblock %}
+
+    <div class="row-fluid">
+        <div class="span9 left">
+            {% block main %}{% endblock %}
+        </div>
+
+        <div class="span3 right">
+            {% block sidebar %}{% endblock %}
+        </div>
     </div>
 </div>
 
-<div class="sidebox container-box mt10 friends">
-    <div class="ui-header">
-        <span class="title">友情社区</span>
-    </div>
-    <div class="ui-content">
-        <p><a href="http://python-china.org"><img src="/static/images/python_china_logo.jpg" alt=""/></a></p>
+{% include 'common/footer.html' %}
 
-        <p><a href="http://ruby-china.org"><img src="/static/images/ruby_china_logo.png" alt=""/></a></p>
-
-        <p><a href="http://trans4fun.org"><img src="/static/images/trans4fun.png" alt=""/></a></p>
-
-        <p><a href="http://www.ubuntusoft.com"><img src="/static/images/ubuntusoft.png" alt=""
-                                                    style="width:190px;"/></a></p>
-    </div>
-</div>
-
-<div class="sidebox container-box mt10 friends">
-    <div class="ui-header">
-        <span class="title">我们的标志</span>
-    </div>
-    <div class="ui-content">
-        <p><a href="http://f2e.im"><img src="/static/images/f2e.im.logo.png" alt=""/></a></p>
-    </div>
-</div>
-
-<div class="sidebox container-box mt10 community-status">
-    <div class="ui-header">
-        <span class="title">运行状态</span>
-    </div>
-    <div class="ui-content">
-        <dl>
-            <dt>注册成员</dt>
-            <dd>{{ status_counter.users }}</dd>
-        </dl>
-        <dl>
-            <dt>节点</dt>
-            <dd>{{ status_counter.nodes }}</dd>
-        </dl>
-        <dl>
-            <dt>主题</dt>
-            <dd>{{ status_counter.topics }}</dd>
-        </dl>
-        <dl>
-            <dt>回复</dt>
-            <dd>{{ status_counter.replies }}</dd>
-        </dl>
-    </div>
-</div>
-</div>
-{% endblock %}
+</body>
+</html>

@@ -1,0 +1,87 @@
+{% extends 'common/content_layout.html' %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/css/codehilite.css"/>
+{% endblock %}
+
+
+{% block main %}
+<div class="notifications container-box">
+    <div class="ui-header">
+        <span class="bread-nav">F2E › 消息提醒</span>
+        {% if user.unread_notifications().count() %}
+            <form class="fr" method="post">
+                {{ csrf() }}
+                <input type="submit" value="全部标记为已读" class="btn btn-small"/>
+            </form>
+        {% endif %}
+    </div>
+
+    <div class="ui-content">
+        {% for notification in object_list %}
+        {% set sender = notification.sender %}
+        {% set receiver = notification.receiver %}
+        <div class="notification-item">
+            <a href="{{ url('notifications') }}">
+                <img src="{{ sender.avatar.small.url }}" alt="{{ sender.username }}" class="avatar"/>
+            </a>
+
+            <div class="main">
+                {% if notification.kind == notification.MENTION %}
+                    <span class="title">
+                        <a href="{{ sender.get_absolute_url() }}">{{ sender.username}}</a>
+                        在 <a href="{{ notification.topic.get_absolute_url() }}">{{ notification.topic.title}}</a>
+                        中提到了你
+                        <span class="f12 ca5 fn">{{ notification.created|human_date }}</span>
+                    </span>
+                    <div class="content">{{ notification.reply.content|markdown|content_process|safe }}</div>
+                {% elif notification.kind == notification.REPLY %}
+                    <span class="title">
+                        <a href="{{ sender.get_absolute_url() }}">{{ sender.username}}</a>
+                        回复了你的主题
+                        <a href="{{ notification.topic.get_absolute_url() }}">{{notification.topic.title }}</a>
+                        <span class="f12 ca5 fn">{{ notification.created|human_date }}</span>
+                    </span>
+                    <div class="content">{{ notification.reply.content|markdown|content_process|safe }}</div>
+                {% elif notification.kind == notification.COMMENT %}
+                    <span class="title">
+                        <a href="{{ sender.get_absolute_url() }}">{{ sender.username}}</a>
+                        评论了你的文章
+                        <a href="{{ notification.blog.get_absolute_url() }}">{{notification.blog.title }}</a>
+                        <span class="f12 ca5 fn">{{ notification.created|human_date }}</span>
+                    </span>
+                    <div class="content">{{ notification.comment.content|markdown|content_process|safe }}</div>
+                {% elif notification.kind == notification.MENTION_IN_COMMENT %}
+                    <span class="title">
+                        <a href="{{ sender.get_absolute_url() }}">{{ sender.username}}</a>
+                        在 <a href="{{ notification.blog.get_absolute_url() }}">{{ notification.blog.title}}</a>
+                        中提到了你
+                        <span class="f12 ca5 fn">{{ notification.created|human_date }}</span>
+                    </span>
+                    <div class="content">{{ notification.comment.content|markdown|content_process|safe }}</div>
+                {% elif notification.kind == notification.FOLLOW %}
+                    <span class="title">
+                        <a href="{{ sender.get_absolute_url() }}">{{ sender.username}}</a> 关注了你
+                        <span class="f12 ca5 fn">{{ notification.created|human_date }}</span>
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if paginator.count == 0 %}
+        <div class="pl10 pr10">
+            <div class="alert mt20">
+                您暂时还没有收到消息提醒。
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="ui-footer">
+        <div class="pagination">
+            {{ page_obj|paginate }}
+        </div>
+    </div>
+</div>
+{% endblock %}

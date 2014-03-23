@@ -1,0 +1,48 @@
+{% macro blogs(blogs) -%}
+    {% for blog in blogs %}
+    <div class="blog-item container-box">
+        <div class="cover">
+            <a href="{{ blog.get_absolute_url() }}">
+                <img src="{{ blog.cover.thumb.url }}" alt="{{ blog.title }}"/>
+            </a>
+        </div>
+
+        <div class="clearfix pr">
+            <a href="{{ url('user', name=blog.author.get_username()) }}">
+                <img src="{{ blog.author.avatar.small.url }}" alt="{{ blog.author.get_username() }}" class="avatar"/>
+            </a>
+
+            <div class="main">
+                <h3 class="title">
+                    <a href="{{ url('blog', id=blog.id) }}">{{ blog.title }}</a>
+                </h3>
+
+                <div class="meta">
+                    <span class="username">
+                        <span class="ca5">by</span> <a href="{{ url('user', blog.author.get_username()) }}">{{ blog.author.get_username() }}</a>
+                    </span> •
+                    <span>
+                        {{ blog.created | human_date }}
+                    </span>
+                </div>
+            </div>
+
+            {% if blog.n_comments %}
+            <div class="count">
+                <a href="{{ url('blog', blog.id) }}">{{ blog.n_comments }}</a>
+            </div>
+            {% endif %}
+        </div>
+
+
+        <div class="summary">
+            {{ blog.content|truncate(60, True) }}
+        </div>
+
+        <div class="read-more">
+            <a href="{{ blog.get_absolute_url() }}">阅读...</a>
+        </div>
+
+    </div>
+    {% endfor %}
+{%- endmacro %}

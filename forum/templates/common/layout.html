@@ -10,12 +10,28 @@
     <script type="text/javascript" src="/static/js/base/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="/static/js/base/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/base/in-min.js"></script>
+    <script type="text/javascript" src="/static/js/base/jquery.cookie.js"></script>
     <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/static/css/main.css"/>
+    {% compressed_css 'main' %}
     <link rel="apple-touch-icon" href="/static/images/f2e.im.icon.png">
+
     {% block stylesheet %}{% endblock %}
     {% block javascript %}{% endblock %}
+
     <script type="text/javascript">
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    var csrftoken = $.cookie('csrftoken');
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
         jQuery(document).ready(function () {
             $('.J_search').submit(function (e) {
                 var _node = $(this);
@@ -40,13 +56,14 @@
 
             <div class="divider-vertical"></div>
             {% if user.is_authenticated() %}
-            {% if notifications_count %}
-            <a href="/notifications" class="notification-indicator tooltipped downwards contextually-unread"
-               title="{{ user.get_username() }}，你有{{ notifications_count }}条未读提醒，去看看吧">
+            {% set notifications_count = user.unread_notifications().count() %}
+            {% if  notifications_count %}
+            <a href="{{ url('notifications') }}" class="notification-indicator tooltipped downwards contextually-unread"
+               title="{{ user.username }}，你有{{ notifications_count }}条未读提醒，去看看吧">
                 <span class="mail-status unread"></span>
             </a>
             {% else %}
-            <a href="/notifications" class="notification-indicator tooltipped downwards" title="暂时没有未读提醒">
+            <a href="{{ url('notifications') }}" class="notification-indicator tooltipped downwards" title="暂时没有未读提醒">
                 <span class="mail-status"></span>
             </a>
             {% endif %}
@@ -55,8 +72,8 @@
             <div class="nav-collapse collapse">
 
                 {% set navigation_bar = [
-                ('/', 'topic', '社区'),
-                ('/members', 'members', '成员'),
+                (url('topic_list'), 'topics', '社区'),
+                (url('blog_list'), 'blogs', '文章'),
                 ('/static/pages/timeline/index.html', 'timeline', '大事记'),
                 ('/static/pages/nav/index.html', 'nav', '导航'),
                 ] -%}
@@ -81,11 +98,11 @@
                     {% if user.is_authenticated() %}
                     <li>
                         <a href="{{ url('user', name=user.get_username()) }}" class="avatar">
-                            <img src="{{ user.profile.avatar.small.url}}"
+                            <img src="{{ user.avatar.small.url}}"
                                  width="20" height="20">
                         </a>
                     </li>
-                    <li><a href="/u/{{ user.get_username() }}">{{ user.get_username() }}</a>
+                    <li><a href="{{ user.get_absolute_url() }}">{{ user.get_username() }}</a>
                     </li>
                     <li>
                         <a href="/setting">

@@ -1,36 +1,26 @@
 @charset "UTF-8";
 
 @import 'compass/_css3';
-@import 'base/atom';
 @import 'base/octicons';
+@import "scut";
 
-html {
-  //background: transparent url("../images/idev.png") repeat scroll 0 0;
-  //background: transparent url("http://img02.taobaocdn.com/tps/i2/T1BsZZXhVfXXXgtLTf-1648-1165.png") repeat scroll 0 0;
-  //font-family: Tahoma, Arial, "Hiragino Sans GB W3", STHeiti, "Microsoft YaHei";
-  background: #e3e3e3;
-  //background: transparent url('http://s.libdd.com/img/bg/htmlbg.$5752.png') repeat scroll 0 0;
-  background: transparent url('http://img01.taobaocdn.com/tps/i1/T1Eyp7Fn4dXXbfQAHy-500-400.png') repeat scroll 0 0;
-  font: 13px Helvetica, arial, freesans, clean, sans-serif;
-  font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
-}
 
 body {
-  //font-family: "TheSerifRegular", "TheSerif", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "微软雅黑", "WenQuanYi Zen Hei", "文泉驿正黑", "WenQuanYi Micro Hei", "文泉驿微米黑", "times new roman", "times", serif;
-  //background: transparent url("../images/idev.png") repeat scroll 0 0;
-  //background: transparent url("http://img02.taobaocdn.com/tps/i2/T1BsZZXhVfXXXgtLTf-1648-1165.png") repeat scroll 0 0;
   background: #e3e3e3;
-  //background: transparent url('http://s.libdd.com/img/bg/htmlbg.$5752.png') repeat scroll 0 0;
-  background: transparent url('http://img01.taobaocdn.com/tps/i1/T1Eyp7Fn4dXXbfQAHy-500-400.png') repeat scroll 0 0;
+  background: transparent url(/static/images/bg.png) repeat scroll 0 0;
   font: 13px Helvetica, arial, freesans, clean, sans-serif;
   font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
 }
 
-a.btn-small {
+a {
+  color: #999;
+}
+
+.btn-small {
   font-size: 12px;
 }
 
-a.btn {
+.btn {
   color: #666 !important;
 }
 
@@ -187,7 +177,7 @@ a.btn {
 
 .container-box {
   @include border-radius(5px, 5px);
-  @extend .clearfix;
+  @extend %scut-clearfix;
   background: #fff;
   list-style-position: inside;
   padding: 10px;
@@ -200,7 +190,7 @@ a.btn {
   -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(150, 150, 150, 0.6);
+  border: 1px solid rgba(150, 150, 150, 0.5);
 
   .ui-header {
     .title {
@@ -209,10 +199,6 @@ a.btn {
       padding: 0 0 8px;
       margin: 0 0 -1px 0;
     }
-  }
-
-  a {
-    color: #999;
   }
 }
 
@@ -246,34 +232,19 @@ a.btn {
 
 .topics {
   padding: 0;
-  //font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  //font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti;
-  //border: 0;
 
   .topic-item {
-    @extend .clearfix;
+    @extend %scut-clearfix;
     padding: 10px 40px 10px 10px;
     margin: 0 0 -1px 0;
-    //border-top: 1px solid #eee;
-    //border-bottom: 1px solid #eee;
     border-bottom: 1px solid #e5e5e5;
     border-top: 1px solid #e5e5e5;
     line-height: 12px;
     position: relative;
 
-    //background-image: url("http://v2ex.com/static/img/bg_item.png");
-    //background-position: 0 bottom;
-    //background-repeat: repeat-x;
-
-    //background-color: #444444;
-    //background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f5f5f5));
-    //background-image: -webkit-linear-gradient(top, #fff, #f5f5f5);
-    //background-image:    -moz-linear-gradient(top, #fff, #f5f5f5);
-    //background-image:      -o-linear-gradient(top, #fff, #f5f5f5);
-    //background-image:         linear-gradient(to bottom, #fff, #f5f5f5);
-
     &:first-child {
       @include border-radius(3px, 3px 3px 0 0);
+      border-top: 0;
     }
 
     &:last-child {
@@ -389,15 +360,136 @@ a.btn {
   }
 }
 
+
+.blogs {
+  padding: 0;
+
+  .blog-item {
+    background-color: #ffffff;
+    @extend %scut-clearfix;
+    padding: 10px 40px 10px 10px;
+    margin: 0 0 20px 0;
+    border-bottom: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+    line-height: 12px;
+    position: relative;
+
+    .cover {
+      margin: -10px -40px 20px (-10px);
+      img {
+        width: 100%;
+      }
+    }
+
+    .avatar {
+      @include border-radius(3px, 3px);
+      float: left;
+      margin: 0 10px 0 0;
+      width: 42px;
+      height: 42px;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: normal;
+      line-height: 21px;
+      color: #777;
+      margin: 0 0 3px 0;
+      letter-spacing: 0;
+      text-shadow: 0 1px 0 #fff;
+
+      a {
+        color: #555;
+      }
+    }
+
+    .meta {
+      font-size: 12px;
+      color: #a5a5a5;
+
+      .username {
+        font-weight: bold;
+        color: #888;
+
+        a {
+          color: #888;
+        }
+      }
+
+      .last-reply-username {
+        strong {
+          margin: 0 0 0 3px;
+          color: #888;
+        }
+      }
+
+      span {
+        margin: 0 5px 0 2px;
+      }
+    }
+
+    .count {
+      @include border-radius(8px, 8px);
+      position: absolute;
+      right: 10px;
+      top: 40%;
+      background: #bbb;
+      font-size: 13px;
+
+      a {
+        color: #fff;
+        padding: 3px 8px;
+        display: block;
+        background: #b5bbcf;
+        @include border-radius(8px, 8px);
+
+        &:visited {
+          background: #d5d5d5;
+        }
+      }
+    }
+
+    .main {
+      padding: 0 0 0 45px;
+    }
+
+    .summary {
+      padding: 20px 0;
+      line-height: 18px;
+    }
+
+    .read-more {
+      margin-bottom: 10px;
+    }
+  }
+
+  .pagination {
+    margin: 13px 15px;
+    float: right;
+
+    a {
+      color: #999;
+      padding: 2px 9px;
+    }
+  }
+
+  .ui-header {
+    padding: 10px;
+
+    .bread-nav {
+      font-size: 14px;
+      line-height: 27px;
+    }
+  }
+}
+
 .usercard {
   padding: 0;
 
   .ui-header {
     @include border-radius(5px, 5px 5px 0 0);
-    @extend .clearfix;
+    @extend %scut-clearfix;
     padding: 10px;
-    background: transparent url("../images/grey_header_web.png") repeat scroll 0 0;
-    color: #fff;
     line-height: 25px;
 
     .avatar {
@@ -410,50 +502,41 @@ a.btn {
 
     .username {
       font-size: 18px;
-      font-weight: bold;
-    }
-
-    .website {
-      a {
-        color: #fff;
-      }
     }
   }
 
   .ui-content {
-    @extend .clearfix;
+    @extend %scut-clearfix;
 
     .status {
-      width: 23.5%;
+      width: 33%;
       float: left;
-      padding: 5px 0;
-      margin: 10px 0;
+      margin-bottom: 10px;
       text-align: center;
       border-right: 1px solid #eee;
       line-height: 18px;
+      font-size: 12px;
 
+      &:last-child {
+        border: 0;
+      }
       strong {
         display: block;
-        font-size: 15px;
+        font-size: 16px;
+        padding-bottom: 4px;
+        color: #888
       }
-
-      a {
-        color: #333;
-      }
-    }
-
-    .status-reputation {
-      border: 0;
     }
 
     a {
-      color: #333;
+      color: #a5a5a5;
+      text-decoration: none;
+      display: block;
     }
   }
 }
 
 .nodes-cloud {
-  //font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti;
   padding: 0;
 
   .title {
@@ -483,6 +566,7 @@ a.btn {
       }
 
       label {
+        cursor: default;
         font-weight: bold;
         float: left;
         text-align: right;
@@ -510,7 +594,6 @@ a.btn {
   border-top: 1px solid #ccc;
   line-height: 20px;
   padding: 8px 0 12px;;
-  //font-family: Monaco, "Microsoft YaHei", "Hiragino Sans GB W3", Tahoma, Arial;
 
   .footer-bg {
     padding: 15px 0 10px 10px;
@@ -536,13 +619,6 @@ a.btn {
     color: #999;
     border: 1px solid #eee;
     font-size: 12px;
-    //font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti;
-
-    //background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f5f5f5));
-    //background-image: -webkit-linear-gradient(top, #fff, #f5f5f5);
-    //background-image:    -moz-linear-gradient(top, #fff, #f5f5f5);
-    //background-image:      -o-linear-gradient(top, #fff, #f5f5f5);
-    //background-image:         linear-gradient(to bottom, #fff, #f5f5f5);
 
     background: -moz-linear-gradient(center top, #fff 0%, #f3f3f3 50%, #ededed 51%, #fff 100%) repeat scroll 0 0 transparent;
     background: -webkit-linear-gradient(top, #fff 0%, #f3f3f3 50%, #ededed 51%, #fff 100%) repeat scroll 0 0 transparent;
@@ -553,7 +629,7 @@ a.btn {
 
 .community-status {
   dl {
-    @extend .clearfix;
+    @extend %scut-clearfix;
     margin: 5px 0 5px 0;
 
     dt {
@@ -565,6 +641,27 @@ a.btn {
     dd {
       padding: 0 0 0 60px;
     }
+  }
+}
+
+.topic-lists {
+  padding: 0;
+
+  .ui-header {
+    .title {
+      padding: 10px;
+    }
+  }
+
+  .topic-item {
+    &:first-child {
+      border-radius: 0;
+    }
+  }
+
+  .ui-footer {
+    padding: 10px;
+    font-size: 12px;
   }
 }
 
@@ -580,18 +677,14 @@ a.btn {
       padding: 15px;
     }
 
-    .user-number {
-      padding: 0 0 0 70px;
-      line-height: 20px;
+    .follow {
       position: absolute;
       right: 20px;
       top: 15px;
-      color: #999;
-      text-shadow: 0 1px 0 #000;
     }
 
     dl {
-      @extend .clearfix;
+      @extend %scut-clearfix;
       margin: 5px 0 5px 0;
 
       dt {
@@ -604,32 +697,6 @@ a.btn {
       dd {
         padding: 0 0 0 60px;
       }
-    }
-  }
-
-  .topic-lists {
-    padding: 0;
-
-    .ui-header {
-      padding: 10px 10px 0;
-    }
-
-    .topic-item {
-      .avatar {
-        display: none;
-      }
-
-      .main {
-        padding: 0;
-      }
-
-      &:first-child {
-        border-radius: 0;
-      }
-    }
-
-    .ui-footer {
-      padding: 10px 10px 10px;
     }
   }
 
@@ -673,17 +740,10 @@ a.btn {
   padding: 0;
 
   .ui-header {
-    @extend .clearfix;
+    @extend %scut-clearfix;
     @include border-radius(5px, 5px 5px 0 0);
     border-bottom: 1px solid #eee;
     padding: 10px;
-    background: #f5f5f5;
-
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f5f5f5));
-    background-image: -webkit-linear-gradient(top, #fff, #f5f5f5);
-    background-image: -moz-linear-gradient(top, #fff, #f5f5f5);
-    background-image: -o-linear-gradient(top, #fff, #f5f5f5);
-    background-image: linear-gradient(to bottom, #fff, #f5f5f5);
 
     .avatar {
       float: right;
@@ -699,11 +759,12 @@ a.btn {
 
   .ui-content {
     padding: 15px 10px 10px 10px;
-    //font-size: 13px;
     font-size: 14px;
     line-height: 25px;
-    //font-family: Monaco, "Microsoft YaHei", "Hiragino Sans GB W3", Tahoma, Arial;
 
+    .cover {
+      margin: -15px -10px 10px (-10px);
+    }
     .gist {
       .gist-file {
         @include border-radius(3px, 3px);
@@ -735,7 +796,7 @@ a.btn {
   }
 
   .ui-footer {
-    @extend .clearfix;
+    @extend %scut-clearfix;
     @include border-radius(5px, 0 0 5px 5px);
     background: #f5f5f5;
     padding: 5px 10px;
@@ -744,12 +805,6 @@ a.btn {
     color: #666;
     font-size: 12px;
     text-shadow: 0px 1px 0px #fff;
-
-    //background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f5f5f5));
-    //background-image: -webkit-linear-gradient(top, #fff, #f5f5f5);
-    //background-image:    -moz-linear-gradient(top, #fff, #f5f5f5);
-    //background-image:      -o-linear-gradient(top, #fff, #f5f5f5);
-    //background-image:         linear-gradient(to bottom, #fff, #f5f5f5);
 
     background: #eeeeee;
     background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%);
@@ -761,7 +816,6 @@ a.btn {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#eeeeee', endColorstr = '#cccccc', GradientType = 0);
 
     a {
-      margin: 0 15px 0 0;
       color: #333;
       font-size: 12px;
       text-shadow: 0px 1px 0px #fff;
@@ -774,25 +828,18 @@ a.btn {
 
   .ui-header {
     @include border-radius(5px, 5px 5px 0 0);
-    padding: 5px 10px;
-    background: #f5f5f5;
+    padding: 7px 10px;
+    color: #999;
     border-bottom: 1px solid #eee;
-
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#f5f5f5));
-    background-image: -webkit-linear-gradient(top, #fff, #f5f5f5);
-    background-image: -moz-linear-gradient(top, #fff, #f5f5f5);
-    background-image: -o-linear-gradient(top, #fff, #f5f5f5);
-    background-image: linear-gradient(to bottom, #fff, #f5f5f5);
+    font-size: 12px;
   }
 
   .ui-content {
-    //padding: 10px;
-    //font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti;
 
     padding: 0 10px;
 
     .reply-item {
-      @extend .clearfix;
+      @extend %scut-clearfix;
       border-bottom: 1px solid #eee;
       padding: 10px 0;
 
@@ -843,10 +890,8 @@ a.btn {
         }
 
         .content {
-          //font-size: 13px;
           font-size: 14px;
           font-weight: normal;
-          //font-family: Monaco, "Microsoft YaHei", "Hiragino Sans GB W3", Tahoma, Arial;
           line-height: 22px;
 
           h1, h2, h3, h4, h5,
@@ -887,6 +932,7 @@ a.btn {
       margin-bottom: 10px;
     }
   }
+  
 
   .ui-content {
     line-height: 23px;
@@ -972,7 +1018,7 @@ form {
   }
 }
 
-.node-topics {
+.node-topics, .blogs {
   .ui-header {
     border-bottom: 1px solid #eee;
   }
@@ -993,7 +1039,7 @@ form {
 }
 
 .notification-item {
-  @extend .clearfix;
+  @extend %scut-clearfix;
   border-bottom: 1px solid #eee;
   padding: 10px 0;
 
@@ -1010,13 +1056,13 @@ form {
 
     .title {
       font-size: 13px;
-      font-weight: bold;
       display: block;
       margin: 0 0 5px 0;
       color: #999;
 
       a {
         color: #333;
+        font-weight: bold;
       }
     }
 
@@ -1037,7 +1083,8 @@ form {
     .content {
       font-size: 13px;
       font-weight: normal;
-      font-family: Monaco, "Microsoft YaHei", "Hiragino Sans GB W3", Tahoma, Arial;
+      padding: 5px;
+      background-color: #F5F5F5;
 
       h1, h2, h3, h4, h5,
       blockquote p {
@@ -1052,7 +1099,9 @@ form {
   padding: 0;
 
   .ui-header {
-    padding: 10px;
+    .title {
+      padding: 10px;
+    }
   }
 
   .ui-content {
@@ -1090,7 +1139,9 @@ form {
   }
 
   .ui-footer {
-    padding: 0 10px;
+    border-top: 1px solid #eee;
+    padding: 10px;
+    font-size: 12px;
   }
 }
 
@@ -1108,7 +1159,6 @@ form {
       margin: 3px 0 0;
 
       a {
-        font-family: Monaco, "Microsoft YaHei", "Hiragino Sans GB W3", Tahoma, Arial;
         color: #666;
         font-size: 12px;
       }
@@ -1320,22 +1370,6 @@ screen and (max-device-width: 720px) {
     }
   }
 
-  .topics {
-    .topic-item {
-      .meta {
-        display: none;
-      }
-
-      .avatar {
-        width: 20px;
-        height: 20px;
-      }
-
-      .main {
-        padding: 0 0 0 30px;
-      }
-    }
-  }
 
   //.topic-create form textarea,
   //.topic-reply-create form textarea {

@@ -1,14 +1,25 @@
+import forum.views.topics
+import forum.views.users
+import forum.views.nodes
+import forum.views.blogs
+import forum.views.root
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
-from forum.views.auth import Register
-from forum.views.topics import New
+from forum.views.auth import RegisterView, AuthenticationForm
 
 
-urlpatterns = patterns('',
-    url(r'^$', 'forum.views.root.index', name='index'),
-
+urlpatterns = patterns(
+    '',
+    url(r'^$', forum.views.root.index, name='index'),
     # auth
-    url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'auth/login.html'}, name='login'),
+    url(r'^login$',
+        'django.contrib.auth.views.login',
+        {
+            'template_name': 'auth/login.html',
+            'authentication_form': AuthenticationForm,
+        },
+        name='login'
+    ),
     url(r'^logout$', 'django.contrib.auth.views.logout_then_login', name='logout'),
     url(r'^password_reset$',
         'django.contrib.auth.views.password_reset',
@@ -17,29 +28,46 @@ urlpatterns = patterns('',
             'email_template_name': 'auth/password_reset_email.html',
             'subject_template_name': 'auth/password_reset_subject.txt',
         },
-        name='password_reset'),
+        name='password_reset'
+    ),
     url(r'^password_reset_done$', 'django.contrib.auth.views.password_reset_done', {'template_name': 'auth/password_reset_done.html'}, name='password_reset_done'),
     url(r'^password_reset_confirm/(?P<uidb64>.+?)/(?P<token>.+?)$',
         'django.contrib.auth.views.password_reset_confirm',
         {
             'template_name': 'auth/password_reset_confirm.html',
-            'post_reset_redirect': reverse_lazy('login')
+            'post_reset_redirect': reverse_lazy('login'),
         },
         name='password_reset_confirm'),
 
-    url(r'^register$', Register.as_view(), name='register'),
+    url(r'^register$', RegisterView.as_view(), name='register'),
 
     # topic
-    url(r'^t/(?P<id>\d+)$', 'forum.views.topics.show', name='topic'),
-    url(r'^t/(?P<id>\d+)/reply$', 'forum.views.topics.reply', name='reply'),
-    url(r'^new/(?P<slug>\w+)$', New.as_view(), name='new_topic'),
+    url(r'^list/topics', forum.views.topics.TopicListView.as_view(), name='topic_list'),
+    url(r'^t/(?P<id>\d+)$', forum.views.topics.show, name='topic'),
+    url(r'^t/(?P<id>\d+)/favourite$', forum.views.topics.FavouriteView.as_view(), name='topic_favourite'),
+    url(r'^t/(?P<id>\d+)/unfavourite$', forum.views.topics.UnfavouriteView.as_view(), name='topic_unfavourite'),
+    url(r'^t/(?P<id>\d+)/reply$', forum.views.topics.reply, name='reply'),
+    url(r'^new/(?P<slug>\w+)$', forum.views.topics.NewView.as_view(), name='new_topic'),
 
     # user
-    url(r'^member/(?P<name>\w+)', 'forum.views.root.index', name='user'),
-    url(r'^member/(?P<name>\w+)/topics$', 'forum.views.root.index', name='user_topics'),
-    url(r'^member/(?P<name>\w+)/replies$', 'forum.views.root.index', name='user_replies'),
-    url(r'^member/(?P<name>\w+)/favourites$', 'forum.views.root.index', name='user_favourites'),
+    url(r'^member/(?P<name>\w+)$', forum.views.users.home, name='user'),
+    url(r'^member/(?P<name>\w+)/topics$', forum.views.users.TopicsView.as_view(), name='user_topics'),
+    url(r'^member/(?P<name>\w+)/replies$', forum.views.users.RepliesView.as_view(), name='user_replies'),
+    url(r'^follow/(?P<name>\w+)', forum.views.users.FollowView.as_view(), name='follow'),
+    url(r'^unfollow/(?P<name>\w+)', forum.views.users.UnfollowView.as_view(), name='unfollow'),
+
+    url(r'^my/topics$', forum.views.users.MyTopicsView.as_view(), name='my_topics'),
+    url(r'^my/nodes$', forum.views.users.MyNodesView.as_view(), name='my_nodes'),
+    url(r'^my/followings$', forum.views.users.MyFollowingsView.as_view(), name='my_followings'),
+    url(r'^my/notifications$', forum.views.users.NotificationView.as_view(), name='notifications'),
 
     # node
-    url(r'^go/(?P<slug>\w+)$', 'forum.views.nodes.show', name='node'),
+    url(r'^go/(?P<slug>\w+)$', forum.views.nodes.show, name='node'),
+    url(r'^node/collect/(?P<slug>\w+)$', forum.views.nodes.CollectView.as_view(), name='node_collect'),
+    url(r'^node/uncollect/(?P<slug>\w+)$', forum.views.nodes.UncollectView.as_view(), name='node_uncollect'),
+
+    # blog
+    url(r'^blog/(?P<id>\d+)$', forum.views.blogs.BlogView.as_view(), name='blog'),
+    url(r'^blog/(?P<id>\d+)/comment$', forum.views.blogs.comment, name='comment'),
+    url(r'^blog/list$', forum.views.blogs.BlogListView.as_view(), name='blog_list'),
 )

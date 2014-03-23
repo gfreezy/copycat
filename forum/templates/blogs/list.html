@@ -1,0 +1,23 @@
+{% extends 'common/content_layout.html' %}
+{% import 'common/blogs.html' as blogs_util %}
+
+{% block main %}
+<div class="blogs">
+    <div class="ui-content">
+        {{ blogs_util.blogs(object_list) }}
+
+        {% if paginator.count == 0 %}
+        <div class="pl10 pr10">
+            <div class="alert mt20 no-topics">
+                暂时还没有文章。
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="ui-footer">
+      {{ page_obj|paginate }}
+    </div>
+</div>
+{% endblock %}
+

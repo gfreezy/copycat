@@ -1,0 +1,151 @@
+{% import 'common/topics.html' as topics_util %}
+{% extends 'common/layout.html' %}
+
+{% block javascript %}
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $('.J_userFollow').click(function (e) {
+            var _node = $(this),
+                _type = _node.data('type'),
+                follow_url = _node.data('follow-url'),
+                unfollow_url = _node.data('unfollow-url');
+
+            e.preventDefault();
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: eval(_type+'_url')
+            }).done(function(resp) {
+                if (_type === 'follow') {
+                    _node.data('type', 'unfollow');
+                    _node.html('取消特别关注');
+                }
+
+                if (_type === 'unfollow') {
+                    _node.data('type', 'follow');
+                    _node.html('特别关注');
+                }
+            }).fail(function(resp) {
+                if (resp.errors) {
+                    alert(resp.errors[0].message);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+{% block main %}
+    <div class="user-page">
+        <div class="profile container-box">
+            <div class="ui-header">
+                <img src="{{ owner.avatar.medium.url }}" alt="{{ owner.username }}"
+                     class="avatar">
+
+                <div class="username">{{ owner.username }}</div>
+                <div class="user-number f12 c9">F2E 第&nbsp;<span class="f13">{{ owner.id }}</span>&nbsp;号成员,
+                    入住于&nbsp;{{ owner.date_joined | date}}</div>
+                {% if user.is_authenticated() and user != owner %}
+                    <div class="follow">
+                        {% if not user.is_following(owner) %}
+                            <a class="btn btn-small J_userFollow" href="javascript:void(0)" data-type="follow"
+                               data-follow-url="{{ url('follow', owner.username) }}"
+                               data-unfollow-url="{{ url('unfollow', owner.username) }}">
+                                特别关注</a>
+                        {% else %}
+                            <a class="btn btn-small J_userFollow" href="javascript:void(0)" data-type="unfollow"
+                               data-follow-url="{{ url('follow', owner.username) }}"
+                               data-unfollow-url="{{ url('unfollow', owner.username) }}">
+                                取消特别关注</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="ui-content">
+                <dl>
+                    <dt>ID</dt>
+                    <dd>guokai</dd>
+                </dl>
+                <dl>
+                    <dt>名号</dt>
+                    <dd>郭凯</dd>
+                </dl>
+                <dl>
+                    <dt>城市</dt>
+                    <dd>北京</dd>
+                </dl>
+                <dl>
+                    <dt>公司</dt>
+                    <dd>淘宝</dd>
+                </dl>
+                <dl>
+                    <dt>Email</dt>
+                    <dd>badkai***@gmail.com</dd>
+                </dl>
+                <dl>
+                    <dt>Twitter</dt>
+                    <dd><a href="http://twitter.com/guokai">http://twitter.com/guokai</a></dd>
+                </dl>
+                <dl>
+                    <dt>Github</dt>
+                    <dd><a href="http://github.com/paulguo">http://github.com/paulguo</a></dd>
+                </dl>
+                <dl>
+                    <dt>Blog</dt>
+                    <dd><a href="http://benben.cc">http://benben.cc</a></dd>
+                </dl>
+                <dl>
+                    <dt>签名</dt>
+                    <dd>光线若要万分明亮，必须射进黑暗的世界。</dd>
+                </dl>
+            </div>
+        </div>
+
+        {% set recent_topics = owner.topic_set.order_by('-last_active_time')[:10] %}
+        <div class="topic-lists container-box mt10">
+            <div class="ui-header">
+                <div class="title c9">{{ owner.username }} 最近创建的主题</div>
+            </div>
+            <div class="ui-content">
+                <div class="topics">
+                     {{ topics_util.topics(recent_topics, show_avatar=False) }}
+                </div>
+                {% if recent_topics.count() == 0 %}
+                <div class="pl10 pr10">
+                    <div class="alert mt20 no-topics">
+                        该用户暂时还没有发表过主题。
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% if recent_topics.count()%}
+            <div class="ui-footer">
+                <a href="{{ url('user_topics', owner.username) }}">›› 查看更多主题</a>
+            </div>
+            {% endif %}
+        </div>
+        {% set recent_replies = owner.reply_set.order_by('-id')[:10].select_related('topic') %}
+
+        <div class="replies-lists container-box mt10">
+            <div class="ui-header">
+                <span class="title c9">{{ owner.username }} 最近回复了</span>
+            </div>
+            <div class="ui-content">
+                <div class="topics">
+                    {{ topics_util.replies(recent_replies) }}
+               </div>
+                {% if recent_replies.count() == 0 %}
+                <div class="pl10 pr10">
+                    <div class="alert mt20 no-replies">
+                        该用户暂时还没有回复过主题。
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% if recent_replies.count()%}
+            <div class="ui-footer">
+                <a href="{{ url('user_replies', owner.username) }}">›› 查看更多回复</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

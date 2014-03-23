@@ -1,15 +1,64 @@
 {% extends 'common/content_layout.html' %}
 {% import 'common/topics.html' as topics_util %}
 
+{% block javascript %}
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $('.J_nodeCollect').click(function (e) {
+            var _node = $(this),
+                _type = _node.data('type'),
+                collect_url = _node.data('collect-url'),
+                uncollect_url = _node.data('uncollect-url');
+
+            e.preventDefault();
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: eval(_type+'_url')
+            }).done(function(resp) {
+                if (_type === 'collect') {
+                    _node.data('type', 'uncollect');
+                    _node.html('取消收藏');
+                }
+
+                if (_type === 'uncollect') {
+                    _node.data('type', 'collect');
+                    _node.html('加入收藏');
+                }
+            }).fail(function(resp) {
+                if (resp.errors) {
+                    alert(resp.errors[0].message);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+
 {% block main %}
 <div class="topics container-box node-topics">
     <div class="ui-header">
-        <a class="btn btn-small fr" type="button" href="{{ url('new_topic', node.slug) }}">创建新主题</a>
-        <span class="bread-nav">F2E › {{ node.name }}</span>
+        <span class="fr f12">
+            <span class="ca5">主题总数</span> <span class="c3">{{ node.topic_set.count() }}</span>
+            {% if user.is_authenticated() %}
+            <span class="ca5 pl5 pr5">•</span>
+                {% if not node.collected_by(user) %}
+                <a href="javascript:void(0)" class="c6 J_nodeCollect" data-type="collect"
+                        data-collect-url="{{ url('node_collect', node.slug) }}"
+                        data-uncollect-url="{{ url('node_uncollect', node.slug) }}">加入收藏</a>
+                {% else %}
+                <a href="javascript:void(0)" class="c6 J_nodeCollect" data-type="uncollect"
+                        data-collect-url="{{ url('node_collect', node.slug) }}"
+                        data-uncollect-url="{{ url('node_uncollect', node.slug) }}">取消收藏</a>
+                {% endif %}
+            {% endif %}
+        </span>
+        <span class="bread-nav">F2E › {{ node.name }}</span><br>
+        <a class="btn btn-small mt10" type="button" href="{{ url('new_topic', node.slug) }}">创建新主题</a>
     </div>
 
     <div class="ui-content">
-        {{ topics_util.list(page.object_list) }}
+        {{ topics_util.topics(page.object_list) }}
 
         {% if page.paginator.count == 0 %}
         <div class="pl10 pr10">

@@ -1,3 +1,5 @@
+@import "../scut";
+
 /*文字排版*/
 .f12 {
   font-size: 12px;
@@ -52,6 +54,18 @@
 }
 
 /*定位*/
+
+.vc {
+  /*
+  竖直居中 inner
+  <div class="vc">
+    <div class="inner">
+    </div>
+  </div>
+  */
+  @include scut-vcenter-td(".vc-inner");
+}
+
 .tl {
   text-align: left;
 }
@@ -89,26 +103,6 @@
 
 .cr {
   clear: right;
-}
-
-.clearfix:after {
-  content: ".";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
-}
-
-.clearfix {
-  display: inline-block;
-}
-
-* html .clearfix {
-  height: 1%
-}
-
-.clearfix {
-  display: block
 }
 
 .vm {
@@ -483,21 +477,32 @@
 }
 
 .clearfix {
-  zoom: 1; /* IE < 8 */
-
-  &:before,
-  &:after {
-    content: ".";
-    display: block;
-    height: 0;
-    visibility: hidden;
-  }
-
-  &:after {
-    clear: both;
-  }
+  @extend %scut-clearfix;
 }
-
 .clear {
   clear: both;
+}
+
+.ca5 {
+  color: #a5a5a5;
+}
+
+.c9 {
+  color: #999999;
+}
+
+.c8 {
+  color: #888888;
+}
+
+.c6 {
+  color: #666666;
+}
+
+.c5 {
+  color: #555555;
+}
+
+.c3 {
+  color: #333333;
 }

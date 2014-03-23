@@ -1,0 +1,169 @@
+{% extends 'common/content_layout.html' %}
+
+{% block title %}
+{{ blog.title }} - F2E
+{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="/static/css/codehilite.css"/>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" src="/static/js/widget/emmet.min.js"></script>
+<script type="text/javascript" src="/static/js/widget/jquery.textarea.min.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $('textarea.smart-code-support').tabby();
+        emmet.require('textarea').setup({
+            pretty_break: false, // enable formatted line breaks (when inserting // between opening and closing tag)
+            use_tab: false       // expand abbreviations by Tab key
+        });
+    });
+</script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        $('.J_replyTo').click(function (e) {
+            username = $(this).attr('data-username');
+            replyContent = $('.J_replyContent');
+            oldContent = replyContent.val();
+            prefix = "@" + username + " ";
+            newContent = '';
+            if (oldContent.length > 0) {
+                if (oldContent != prefix) {
+                    newContent = oldContent + "\n" + prefix;
+                }
+            } else {
+                newContent = prefix;
+            }
+            replyContent.focus();
+            replyContent.val(newContent);
+        });
+
+        $('.J_replyContent').keydown(function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.which === 13) {
+                e.preventDefault();
+                $(e.currentTarget).parent('form').submit();
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block main %}
+<div class="topic-detail container-box">
+    <div class="ui-header">
+        <a href="{{ blog.author.get_absolute_url() }}">
+            <img src="{{ blog.author.avatar.medium.url }}" width="73" height="73"
+                 class="avatar"/>
+        </a>
+
+        <div class="main">
+            <span class="bread-nav">F2E › blog</span>
+            <h3 class="title">{{ blog.title }}</h3>
+
+            <div class="meta">
+                <span class="username">
+                    <a href="{{ blog.author.get_absolute_url() }}">{{ blog.author.username }}</a>
+                </span>
+                {%
+                set latest_comment = blog.comment_set.last()
+                -%}
+                {% if latest_comment %}
+                <span class="created-time">发表于 {{ blog.created|human_date }}</span> •
+                        <span class="last-reply-username">最后评论来自
+                            <a href="{{ latest_comment.author.get_absolute_url() }}">
+                                <strong>{{ latest_comment.author.username }}</strong>
+                            </a>
+                        </span> •
+                <span class="last-reply-time">{{ latest_comment.created|human_date }}</span>
+                {% else %}
+                <span class="created-time">发表于 {{ blog.created|human_date }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="ui-content">
+        <div class="cover">
+            <img src="{{ blog.cover.url }}" width="648">
+        </div>
+        {{ blog.content|markdown|content_process|safe }}
+    </div>
+    <div class="ui-footer">
+        <a href="#" class="mr15"
+           onclick="window.open('http://service.weibo.com/share/share.php?url={{ request.build_absolute_uri(blog.get_absolute_url()) }}&title=F2E%20-%20{{ blog.title }}', '_blank', 'width=550, height=370');">
+            新浪微博</a>
+        {% if blog.created_by(user) %}
+        <a href="/t/edit/{{ blog.id }}" class="fr ml15">编辑</a>
+        {% endif %}
+        <span class="hits fr">{{ blog.n_hits }} 次点击</span>
+    </div>
+</div>
+
+{% set comments_count = paginator.count%}
+{% if comments_count %}
+<div class="topic-reply container-box mt10">
+    <div class="ui-header">
+        <span>{{ comments_count }}&nbsp;条评论&nbsp;|&nbsp;直到&nbsp;{{ latest_comment.created|datetime }}</span>
+    </div>
+    <div class="ui-content">
+        {% set floor = page_obj.start_index() %}
+        {% for comment in object_list %}
+        <div class="reply-item">
+            <a href="{{ comment.author.get_absolute_url() }}">
+                <img src="{{ comment.author.avatar.small.url }}" alt=""
+                     class="avatar"/>
+            </a>
+
+            <div class="main">
+                <div class="meta">
+                    <a href="{{ comment.author.get_absolute_url() }}" class="reply-username">
+                        <span class="username">{{ comment.author.username }}</span>
+                    </a>
+                    <span class="time">{{ comment.created|human_date }}</span>
+                    <div class="fr">
+                        <span class="reply-to J_replyTo" data-username="{{ comment.author.username }}">
+                            <img src="/static/images/reply.png" alt=""/>
+                        </span>
+                        <span class="floor">#{{ floor + loop.index0 }}</span>
+                    </div>
+                </div>
+                <span class="content">{{ comment.content|markdown|content_process|safe }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="ui-footer">
+        {{page_obj|paginate}}
+    </div>
+</div>
+{% else %}
+<div class="alert mt20 no-replies">
+    暂无评论，说出你的观点吧
+</div>
+{% endif %}
+
+<div class="topic-reply-create container-box mt10" id="replyform">
+    {% if user.is_authenticated() %}
+    <div class="ui-header">
+        <span class="title">创建新的评论</span>
+    </div>
+    <div class="ui-content">
+        <form class="mt10" action="{{url('comment', blog.id)}}" method="post">
+
+            <textarea rows="3" class="content mt5 smart-code-support J_replyContent" placeholder="评论内容"
+                      name="content"></textarea>
+            <input type="submit" id="checkall" class="btn btn-small" value="添加评论">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
+        </form>
+    </div>
+    {% else %}
+    <div class="ui-header">
+        <span class="title">登录后即可评论</span>
+    </div>
+    <div class="ui-content">
+        <a class="btn btn-small mt5 mr10" type="button" href="{{ url('login') }}">登录</a>
+        <a class="btn btn-small mt5" type="button" href="{{ url('register') }}">注册</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

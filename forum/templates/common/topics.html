@@ -1,40 +1,61 @@
-{% macro list(topics) -%}
-<div class="topics container-box deprecated-mt10">
+{% macro topics(topics, show_avatar=True) -%}
+<div>
     {% for topic in topics %}
     <div class="topic-item">
+        {% if show_avatar %}
         <a href="{{ url('user', name=topic.author.get_username()) }}">
-            <img src="{{ topic.author.profile.avatar.small.url }}" alt="{{ topic.author.get_username() }}" class="avatar"/>
+            <img src="{{ topic.author.avatar.small.url }}" alt="{{ topic.author.get_username() }}" class="avatar"/>
         </a>
+        {% endif %}
 
-        <div class="main">
+        <div class="{% if show_avatar %}main{% endif %}">
             <h3 class="title">
                 <a href="{{ url('topic', id=topic.id) }}">{{ topic.title }}</a>
             </h3>
 
             <div class="meta">
                 <span class="node"><a href="{{ url('node', topic.node.slug) }}">{{ topic.node.name }}</a></span> •
-                        <span class="username">
-                            <a href="{{ url('user', topic.author.get_username()) }}">{{ topic.author.get_username() }}</a>
-                        </span> •
+                <span class="username">
+                    <a href="{{ url('user', topic.author.get_username()) }}">{{ topic.author.get_username() }}</a>
+                </span> •
+                <span>{{ topic.created|human_date }}</span> •
                 {% set latest_reply = topic.reply_set.last() %}
                 {% if latest_reply %}
-                <span class="last-touched">{{ latest_reply.created | human_date }}</span> •
-                            <span class="last-reply-username">最后回复来自
-                                <a href="{{ url('user', latest_reply.author.get_username()) }}">
-                                    <strong>{{ latest_reply.author.get_username() }}</strong>
-                                </a>
-                            </span>
-                {% else %}
-                <span class="last-touched">{{ topic.author.get_username() }}</span>
+                <span class="last-reply-username">最后回复来自
+                    <a href="{{ url('user', latest_reply.author.get_username()) }}">
+                        <strong>{{ latest_reply.author.get_username() }}</strong>
+                    </a>
+                </span> •
+                <span class="last-touched">{{ latest_reply.created | human_date }}</span>
                 {% endif %}
             </div>
         </div>
-        {% if topic.reply_count %}
+        {% if topic.n_replies %}
         <div class="count">
-            <a href="{{ url('topic', topic.id) }}">{{ topic.reply_count }}</a>
+            <a href="{{ url('topic', topic.id) }}">{{ topic.n_replies }}</a>
         </div>
         {% endif %}
     </div>
     {% endfor %}
+</div>
+{%- endmacro %}
+
+
+{% macro replies(replies) -%}
+<div>
+{% for reply in replies %}
+    {% set t = reply.topic %}
+    <div class="reply-item">
+        <div class="main">
+            <span class="title">
+                回复了 {{ t.author.username }} 创建的主题 <a href="{{ url('topic', t.id) }}">{{ t.title }}</a>
+            </span>
+
+            <div class="content">
+                <p>{{ reply.content|markdown|content_process|safe }}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
 </div>
 {%- endmacro %}

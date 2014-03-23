@@ -3,35 +3,32 @@
 {% block sidebar %}
 {% if user.is_authenticated() %}
 <div class="usercard container-box">
-    <div class="ui-header">
+    <div class="ui-header vc">
         <a href="{{ url('user', user.get_username()) }}">
-            <img src="{{ user.profile.avatar.small.url }}" alt="{{ user.get_username() }}"
+            <img src="{{ user.avatar.small.url }}" alt="{{ user.get_username() }}"
                  class="avatar"/>
         </a>
 
-        <div class="username">{{ user.get_username() }}</div>
+        <div class="username vc-inner"><a href="{{ url('user', user.username) }}">{{ user.get_username() }}</a></div>
     </div>
     <div class="ui-content">
-        <div class="status status-topic">
-            <strong><a href="/topics">{{ user.topic_set.count() }}</a></strong> 主题
+        <div class="status status-collects">
+            <a href="{{ url('my_nodes') }}"><strong>{{ user.n_collects }}</strong> 节点收藏</a>
         </div>
-        <div class="status status-reply">
-            <strong><a href="replies">{{ user.reply_set.count() }}</a></strong> 回复
+        <div class="status status-favourites">
+            <a href="{{ url('my_topics') }}"><strong>{{ user.n_favourites }}</strong> 主题收藏</a>
         </div>
-        <div class="status status-favorite">
-            <strong><a href="favourites">{{ 0 }}</a></strong> 收藏
-        </div>
-        <div class="status status-reputation">
-            <strong>{{ user.profile.reputation or 0 }}</strong> 威望
+        <div class="status status-followings">
+            <a href="{{ url('my_followings') }}"><strong>{{ user.n_followings }}</strong> 特别关注</a>
         </div>
     </div>
 </div>
     {% if 0 %}
     <div class="alert mt10 mb10">
-                    <span>
-                        <a href="/notifications">{{ user.get_username() }}，你有{{
-                            user.notification_set.count() }}条未读提醒，去看看吧</a>
-                    </span>
+    <span>
+        <a href="/notifications">{{ user.get_username() }}，你有{{
+            user.notification_set.count() }}条未读提醒，去看看吧</a>
+    </span>
     </div>
     {% endif %}
 {% else %}

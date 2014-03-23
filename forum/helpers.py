@@ -1,11 +1,69 @@
 #coding: utf8
 import re
+import pytz
 import django.utils.timezone
 from datetime import datetime
 from jingo import register, env
 from jinja2.utils import Markup
 from markdown import markdown as markdown_
 from django.template.loader import render_to_string
+from copycat import settings
+
+
+if settings.TIME_ZONE:
+    local_tzinfo = pytz.timezone(settings.TIME_ZONE)
+else:
+    local_tzinfo = pytz.utc
+
+
+def rename(name):
+    def _(f):
+        f.__name__ = name
+        return f
+    return _
+
+
+def localtime(value):
+    return value.astimezone(local_tzinfo)
+
+
+def is_naive(value):
+    """
+    Determines if a given datetime.datetime is naive.
+
+    The logic is described in Python's docs:
+    http://docs.python.org/library/datetime.html#datetime.tzinfo
+    """
+    return value.tzinfo is None or value.tzinfo.utcoffset(value) is None
+
+
+def template_localtime(value, use_tz=None):
+    """
+    Checks if value is a datetime and converts it to local time if necessary.
+
+    If use_tz is provided and is not None, that will force the value to
+    be converted (or not), overriding the value of settings.USE_TZ.
+
+    This function is designed for use by the template engine.
+    """
+    should_convert = (isinstance(value, datetime)
+        and (settings.USE_TZ if use_tz is None else use_tz)
+        and not is_naive(value)
+        and getattr(value, 'convert_to_local_time', True))
+    return localtime(value) if should_convert else value
+
+
+@register.filter
+def date(d, format='%Y-%m-%d', tz=None):
+    local = template_localtime(d, tz)
+    return local.strftime(format)
+
+
+@register.filter
+@rename('datetime')
+def datetime_(d, format='%Y-%m-%d %H:%M:%S', tz=None):
+    local = template_localtime(d, tz)
+    return local.strftime(format)
 
 
 @register.filter
