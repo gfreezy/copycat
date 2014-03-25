@@ -155,13 +155,13 @@ def markdown(content):
 def dump_errors(errors):
     t = env.from_string('''
         {% if errors %}
-        <div class="errors alert alert-error">
             {% for field_errors in errors.values() %}
                 {% for err in field_errors %}
-                <div>{{ err }}</div>
+                <div class="alert alert-error">
+                {{ err }}
+                </div>
                 {%endfor%}
             {% endfor %}
-        </div>
         {% endif %}
     ''')
     return Markup(t.render(dict(errors=errors)))
@@ -171,11 +171,9 @@ def dump_errors(errors):
 def dump_messages(messages):
     t = env.from_string('''
         {% if messages %}
-        <div class="messages">
             {% for message in messages %}
             <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
             {% endfor %}
-        </div>
         {% endif %}
     ''')
     return Markup(t.render(dict(messages=messages)))

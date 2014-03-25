@@ -35,13 +35,12 @@
 </script>
 {% endblock %}
 
-{% block main %}
-<div class="topics container-box node-topics">
-    <div class="ui-header">
+{% block header_left %}
+<div class="clearfix">
+    <div class="title">
         <span class="fr f12">
-            <span class="ca5">主题总数</span> <span class="c3">{{ node.topic_set.count() }}</span>
+            <span class="fr ml10"><a class="btn btn-small" type="button" href="{{ url('new_topic', node.slug) }}">创建新主题</a></span>
             {% if user.is_authenticated() %}
-            <span class="ca5 pl5 pr5">•</span>
                 {% if not node.collected_by(user) %}
                 <a href="javascript:void(0)" class="c6 J_nodeCollect" data-type="collect"
                         data-collect-url="{{ url('node_collect', node.slug) }}"
@@ -54,22 +53,26 @@
             {% endif %}
         </span>
         <span class="bread-nav">F2E › {{ node.name }}</span><br>
-        <a class="btn btn-small mt10" type="button" href="{{ url('new_topic', node.slug) }}">创建新主题</a>
     </div>
+</div>
+{% endblock %}
 
-    <div class="ui-content">
-        {{ topics_util.topics(page.object_list) }}
+{% block main %}
 
-        {% if page.paginator.count == 0 %}
-        <div class="pl10 pr10">
-            <div class="alert mt20 no-topics">
-                该结点下暂时还没有主题，发出你的讨论吧。
-            </div>
+<div class="topics node-topics">
+    {{ topics_util.topics(page.object_list) }}
+
+    {% if page.paginator.count == 0 %}
+    <div class="pl10 pr10">
+        <div class="alert mt20 no-topics">
+            该结点下暂时还没有主题，发出你的讨论吧。
         </div>
-        {% endif %}
     </div>
+    {% endif %}
+</div>
 
-    <div class="ui-footer">
+<div class="clearfix">
+    <div class="fr">
       {{ page|paginate }}
     </div>
 </div>

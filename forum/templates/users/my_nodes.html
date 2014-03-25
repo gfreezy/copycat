@@ -1,13 +1,12 @@
 {% import 'common/topics.html' as topics_util %}
 {% extends 'common/content_layout.html' %}
 
+{% block header_left %}
+    <span class="title bread-nav">F2E › 来自我收藏的节点的最新主题</span>
+{% endblock %}
+
 {% block main %}
 <div class="topic-lists container-box user-topics">
-    <div class="ui-header">
-        <span class="title bread-nav">F2E › 来自我收藏的节点的最新主题</span>
-    </div>
-
-    <div class="ui-content">
         <div class="topics">
             {{ topics_util.topics(object_list) }}
         </div>
@@ -19,9 +18,11 @@
             </div>
         </div>
         {% endif %}
-    </div>
 
-    <div class="ui-footer">
+</div>
+
+<div class="clearfix">
+    <div class="fr">
         {{ page_obj|paginate }}
     </div>
 </div>

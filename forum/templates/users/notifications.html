@@ -4,24 +4,22 @@
 <link rel="stylesheet" href="/static/css/codehilite.css"/>
 {% endblock %}
 
+{% block header_left %}
+    <span class="bread-nav title">F2E › 消息提醒</span>
+    {% if user.unread_notifications().count() %}
+        <form class="fr" method="post">
+            {{ csrf() }}
+            <input type="submit" value="全部标记为已读" class="btn btn-small"/>
+        </form>
+    {% endif %}
+{% endblock %}
 
 {% block main %}
-<div class="notifications container-box">
-    <div class="ui-header">
-        <span class="bread-nav">F2E › 消息提醒</span>
-        {% if user.unread_notifications().count() %}
-            <form class="fr" method="post">
-                {{ csrf() }}
-                <input type="submit" value="全部标记为已读" class="btn btn-small"/>
-            </form>
-        {% endif %}
-    </div>
-
-    <div class="ui-content">
+<div class="notifications">
         {% for notification in object_list %}
         {% set sender = notification.sender %}
         {% set receiver = notification.receiver %}
-        <div class="notification-item">
+        <div class="notification-item white-bg shadow p10 mb10">
             <a href="{{ url('notifications') }}">
                 <img src="{{ sender.avatar.small.url }}" alt="{{ sender.username }}" class="avatar"/>
             </a>
@@ -76,12 +74,12 @@
             </div>
         </div>
         {% endif %}
-    </div>
 
-    <div class="ui-footer">
-        <div class="pagination">
-            {{ page_obj|paginate }}
-        </div>
+</div>
+<div class="clearfix">
+    <div class="fr">
+        {{ page_obj|paginate }}
     </div>
 </div>
+
 {% endblock %}

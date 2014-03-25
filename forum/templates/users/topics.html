@@ -1,13 +1,12 @@
 {% import 'common/topics.html' as topics_util %}
 {% extends 'common/content_layout.html' %}
 
-{% block main %}
-<div class="topic-lists container-box user-topics">
-    <div class="ui-header">
-        <span class="title bread-nav">F2E › {{ owner.username }} › 主题列表</span>
-    </div>
+{% block header_left %}
+    <span class="title bread-nav">F2E > {{ owner.username }} > 主题列表</span>
+{% endblock %}
 
-    <div class="ui-content">
+{% block main %}
+<div class="topic-lists user-topics">
         <div class="topics">
             {{ topics_util.topics(topic_list) }}
         </div>
@@ -19,11 +18,14 @@
             </div>
         </div>
         {% endif %}
-    </div>
 
-    <div class="ui-footer">
+</div>
+
+<div class="clearfix">
+    <div class="fr">
         {{ page_obj|paginate }}
     </div>
 </div>
+
 {% endblock %}
 

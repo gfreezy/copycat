@@ -1,6 +1,6 @@
 {% macro blogs(blogs) -%}
     {% for blog in blogs %}
-    <div class="blog-item container-box">
+    <div class="blog-item">
         <div class="cover">
             <a href="{{ blog.get_absolute_url() }}">
                 <img src="{{ blog.cover.thumb.url }}" alt="{{ blog.title }}"/>

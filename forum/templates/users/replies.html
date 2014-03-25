@@ -5,13 +5,13 @@
 <link rel="stylesheet" href="/static/css/codehilite.css"/>
 {% endblock %}
 
-{% block main %}
-<div class="replies-lists container-box user-replies">
-    <div class="ui-header">
-        <span class="title bread-nav">F2E › <a href="{{ owner.get_absolute_url() }}">{{ owner.get_username()}}</a> › 回复列表</span>
-    </div>
+{% block header_left %}
+    <span class="title bread-nav">F2E > {{ owner.username }} > 回复列表</span>
+{% endblock %}
 
-    <div class="ui-content">
+
+{% block main %}
+<div class="replies-lists user-replies">
         {{ topics_util.replies(reply_list) }}
 
         {% if paginator.count == 0 %}
@@ -21,10 +21,12 @@
             </div>
         </div>
         {% endif %}
-    </div>
 
-    <div class="ui-footer">
+</div>
+<div class="clearfix">
+    <div class="fr">
         {{ page_obj|paginate }}
     </div>
 </div>
+
 {% endblock %}

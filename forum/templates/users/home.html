@@ -34,9 +34,15 @@
     });
 </script>
 {% endblock %}
+
+
+{% block header_left %}
+<div class="title">F2E > {{ owner.username }}</div>
+{% endblock %}
+
 {% block main %}
     <div class="user-page">
-        <div class="profile container-box">
+        <div class="profile shaddow">
             <div class="ui-header">
                 <img src="{{ owner.avatar.medium.url }}" alt="{{ owner.username }}"
                      class="avatar">
@@ -101,9 +107,9 @@
         </div>
 
         {% set recent_topics = owner.topic_set.order_by('-last_active_time')[:10] %}
-        <div class="topic-lists container-box mt10">
+        <div class="topic-lists mt20">
             <div class="ui-header">
-                <div class="title c9">{{ owner.username }} 最近创建的主题</div>
+                <div class="title">{{ owner.username }} 最近创建的主题</div>
             </div>
             <div class="ui-content">
                 <div class="topics">
@@ -125,9 +131,9 @@
         </div>
         {% set recent_replies = owner.reply_set.order_by('-id')[:10].select_related('topic') %}
 
-        <div class="replies-lists container-box mt10">
+        <div class="replies-lists mt20">
             <div class="ui-header">
-                <span class="title c9">{{ owner.username }} 最近回复了</span>
+                <span class="title">{{ owner.username }} 最近回复了</span>
             </div>
             <div class="ui-content">
                 <div class="topics">

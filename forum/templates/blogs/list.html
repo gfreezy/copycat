@@ -1,23 +1,28 @@
 {% extends 'common/content_layout.html' %}
 {% import 'common/blogs.html' as blogs_util %}
 
+{% block header_left %}
+    <div class="title">信息要闻</div>
+{% endblock %}
 {% block main %}
 <div class="blogs">
-    <div class="ui-content">
-        {{ blogs_util.blogs(object_list) }}
+    {{ blogs_util.blogs(object_list) }}
 
-        {% if paginator.count == 0 %}
-        <div class="pl10 pr10">
-            <div class="alert mt20 no-topics">
-                暂时还没有文章。
-            </div>
+    {% if paginator.count == 0 %}
+    <div class="pl10 pr10">
+        <div class="alert mt20 no-topics">
+            暂时还没有文章。
         </div>
-        {% endif %}
     </div>
+    {% endif %}
 
-    <div class="ui-footer">
-      {{ page_obj|paginate }}
+</div>
+
+<div class="clearfix">
+    <div class="fr">
+        {{ page_obj|paginate }}
     </div>
 </div>
+
 {% endblock %}
 

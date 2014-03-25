@@ -22,22 +22,17 @@
 </script>
 {% endblock %}
 
-{% block main %}
-<div class="topic-create container-box">
-    <div class="ui-header">
-        <span class="title">创建新主题</span>
-    </div>
+{% block header_left %}
+    <div class="title">创建新主题</div>
+{% endblock %}
 
-    <div class="ui-content">
+{% block main %}
+<div class="topic-create">
         <form class="mt10" action="" method="post">
-            <div class="input-prepend mt10">
-                <span class="add-on">#</span>
-                <input class="span11" id="prependedInput" type="text" placeholder="主题" name="title" value="{{ form.title.value() }}">
-            </div>
+            <input class="input-xxlarge" id="prependedInput" type="text" placeholder="主题" name="title" value="{{ form.title.value() }}">
             <textarea rows="3" class="content mt5 smart-code-support" placeholder="正文" name="content">{{ form.content.value() }}</textarea>
             <input type="submit" id="checkall" class="btn btn-small" value="立即创建">
             <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
         </form>
-    </div>
 </div>
 {% endblock %}

@@ -63,7 +63,13 @@
     </div>
   </div>
   */
-  @include scut-vcenter-td(".vc-inner");
+  @include scut-vcenter-ib(".vc-inner");
+}
+
+.fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
 }
 
 .tl {
@@ -364,6 +370,10 @@
   padding: 20px;
 }
 
+.p24 {
+  padding: 24px;
+}
+
 .p30 {
   padding: 30px;
 }
@@ -479,6 +489,7 @@
 .clearfix {
   @extend %scut-clearfix;
 }
+
 .clear {
   clear: both;
 }
@@ -505,4 +516,8 @@
 
 .c3 {
   color: #333333;
+}
+
+.white-bg {
+  background-color: #ffffff;
 }

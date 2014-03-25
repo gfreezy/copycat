@@ -44,9 +44,9 @@ urlpatterns = patterns(
     # topic
     url(r'^list/topics', forum.views.topics.TopicListView.as_view(), name='topic_list'),
     url(r'^t/(?P<id>\d+)$', forum.views.topics.show, name='topic'),
-    url(r'^t/(?P<id>\d+)/favourite$', forum.views.topics.FavouriteView.as_view(), name='topic_favourite'),
-    url(r'^t/(?P<id>\d+)/unfavourite$', forum.views.topics.UnfavouriteView.as_view(), name='topic_unfavourite'),
-    url(r'^t/(?P<id>\d+)/reply$', forum.views.topics.reply, name='reply'),
+    url(r'^favourite/(?P<id>\d+)$', forum.views.topics.FavouriteView.as_view(), name='topic_favourite'),
+    url(r'^unfavourite/(?P<id>\d+)$', forum.views.topics.UnfavouriteView.as_view(), name='topic_unfavourite'),
+    url(r'^reply/(?P<id>\d+)$', forum.views.topics.reply, name='reply'),
     url(r'^new/(?P<slug>\w+)$', forum.views.topics.NewView.as_view(), name='new_topic'),
 
     # user
@@ -70,4 +70,6 @@ urlpatterns = patterns(
     url(r'^blog/(?P<id>\d+)$', forum.views.blogs.BlogView.as_view(), name='blog'),
     url(r'^blog/(?P<id>\d+)/comment$', forum.views.blogs.comment, name='comment'),
     url(r'^blog/list$', forum.views.blogs.BlogListView.as_view(), name='blog_list'),
+    url(r'^stick/(?P<id>\w+)$', forum.views.blogs.StickView.as_view(), name='blog_stick'),
+    url(r'^unstick/(?P<id>\w+)$', forum.views.blogs.UnstickView.as_view(), name='blog_unstick'),
 )

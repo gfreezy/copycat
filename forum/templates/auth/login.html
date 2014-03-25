@@ -1,15 +1,16 @@
 {% extends 'common/layout.html' %}
 
+{% block header_left %}
+    <div class="title">登录</div>
+{% endblock %}
+
 {% block main %}
-<div class="container-box">
+<div class="">
     {% if user.is_authenticated() %}
     你已经登录了，<a href="{{ url('index') }}">返回首页</a>
     {% else %}
     <form class="form-horizontal" action='' method="POST">
         <fieldset>
-            <div id="legend" class="mb50">
-                <legend class="">登录</legend>
-            </div>
 
             <div class="control-group">
                 <!-- E-mail -->
@@ -36,7 +37,7 @@
             <div class="control-group">
                 <!-- Button -->
                 <div class="controls">
-                    <button class="btn btn-success">登录</button>
+                    <button class="btn">登录</button>
                     <a href="{{ url('register') }}" class="ml10 mr10 btn">注册账号</a>
                     <a href="{{url('password_reset')}}" class="btn">忘记密码了</a>
                 </div>
@@ -49,13 +50,3 @@
 </div>
 {% endblock %}
 
-{% block sidebar %}
-<div class="sidenav container-box">
-    <ul>
-        <li class="current"><a href="/setting">用户中心</a></li>
-        <li><a href="/setting/avatar">设置头像</a></li>
-        <li><a href="/setting/password">设置密码</a></li>
-        <li><a href="/">返回首页</a></li>
-    </ul>
-</div>
-{% endblock %}

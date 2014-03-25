@@ -235,8 +235,8 @@ class Topic(models.Model):
         return '<Topic:%s %s>' % (self.id, self.title)
 
     @classmethod
-    def hot(cls):
-        return cls.objects.order_by('-last_active_time')[:20]
+    def hot(cls, number=10):
+        return cls.objects.order_by('-last_active_time')[:number]
 
     def hit(self):
         self.n_hits += 1
@@ -461,6 +461,7 @@ class Blog(models.Model):
         process_source=dict(size=(646, 646), sharpen=True),
         thumbnails={
             'thumb': dict(size=(646, 190), sharpen=True, upscale=True),
+            'cover': dict(size=(550, 310), sharpen=True, upscale=True),
         }
     )
     n_comments = models.IntegerField(default=0, editable=False)
@@ -474,6 +475,11 @@ class Blog(models.Model):
     @classmethod
     def recent(cls, n=2):
         return cls.objects.order_by('-id')[:n]
+
+    @classmethod
+    def sticks(cls):
+        blog_ids = StickBlog.objects.order_by('-id')[:10].values_list('blog_id')
+        return cls.objects.filter(id__in=blog_ids)
 
     def hit(self):
         self.n_hits += 1
@@ -503,6 +509,16 @@ class Blog(models.Model):
 
         return c
 
+    def stick(self):
+        self.unstick()
+        StickBlog.objects.create(blog=self)
+
+    def unstick(self):
+        StickBlog.objects.filter(blog=self).delete()
+
+    def sticked(self):
+        return StickBlog.objects.filter(blog=self).exists()
+
 
 class Comment(models.Model):
     content = models.TextField()
@@ -512,3 +528,11 @@ class Comment(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)
+
+
+class StickBlog(models.Model):
+    blog = models.ForeignKey(Blog)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=True)
+

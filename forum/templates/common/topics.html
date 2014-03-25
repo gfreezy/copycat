@@ -18,10 +18,10 @@
                 <span class="username">
                     <a href="{{ url('user', topic.author.get_username()) }}">{{ topic.author.get_username() }}</a>
                 </span> •
-                <span>{{ topic.created|human_date }}</span> •
+                <span>{{ topic.created|human_date }}</span>
                 {% set latest_reply = topic.reply_set.last() %}
                 {% if latest_reply %}
-                <span class="last-reply-username">最后回复来自
+                <span class="last-reply-username"> • 最后回复来自
                     <a href="{{ url('user', latest_reply.author.get_username()) }}">
                         <strong>{{ latest_reply.author.get_username() }}</strong>
                     </a>

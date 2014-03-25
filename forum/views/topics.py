@@ -26,7 +26,7 @@ class TopicForm(forms.ModelForm):
         fields = ['title', 'content']
 
 
-class TopicListView(LoginRequiredMixin, TemplateView):
+class TopicListView(TemplateView):
     template_name = 'topics/list.html'
     http_method_names = ['get']
 
@@ -39,6 +39,7 @@ class TopicListView(LoginRequiredMixin, TemplateView):
             'total_nodes': Node.objects.count(),
             'total_replies': Reply.objects.count(),
             'planes': Plane.objects.all(),
+            'tab': 'forum',
         }
         return ctx
 

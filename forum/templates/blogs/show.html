@@ -45,12 +45,44 @@
                 $(e.currentTarget).parent('form').submit();
             }
         });
+
+        $('.J_stick').click(function (e) {
+            var _node = $(this),
+                _type = _node.data('type'),
+                stick_url = _node.data('stick-url'),
+                unstick_url = _node.data('unstick-url');
+
+            e.preventDefault();
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: eval(_type+'_url')
+            }).done(function(resp) {
+                if (_type === 'stick') {
+                    _node.data('type', 'unstick');
+                    _node.html('取消置顶');
+                }
+
+                if (_type === 'unstick') {
+                    _node.data('type', 'stick');
+                    _node.html('置顶到首页');
+                }
+            }).fail(function(resp) {
+                if (resp.errors) {
+                    alert(resp.errors[0].message);
+                }
+            });
+        });
     });
 </script>
 {% endblock %}
 
+{% block header_left %}
+    <span class="bread-nav title">F2E › blog</span>
+{% endblock %}
+
 {% block main %}
-<div class="topic-detail container-box">
+<div class="topic-detail shadow white-bg">
     <div class="ui-header">
         <a href="{{ blog.author.get_absolute_url() }}">
             <img src="{{ blog.author.avatar.medium.url }}" width="73" height="73"
@@ -58,8 +90,7 @@
         </a>
 
         <div class="main">
-            <span class="bread-nav">F2E › blog</span>
-            <h3 class="title">{{ blog.title }}</h3>
+            <h2 class="title">{{ blog.title }}</h2>
 
             <div class="meta">
                 <span class="username">
@@ -92,6 +123,21 @@
         <a href="#" class="mr15"
            onclick="window.open('http://service.weibo.com/share/share.php?url={{ request.build_absolute_uri(blog.get_absolute_url()) }}&title=F2E%20-%20{{ blog.title }}', '_blank', 'width=550, height=370');">
             新浪微博</a>
+
+        {% if user.is_superuser %}
+            {% if blog.sticked() %}
+            <a href="javascript:void(0);" rel="nofollow" class="J_stick" data-type="unstick"
+               data-stick-url="{{ url('blog_stick', blog.id) }}"
+               data-unstick-url="{{ url('blog_unstick', blog.id) }}"
+                    >取消置顶</a>
+            {% else %}
+               <a href="javascript:void(0);" rel="nofollow" class="J_stick" data-type="stick"
+               data-stick-url="{{ url('blog_stick', blog.id) }}"
+               data-unstick-url="{{ url('blog_unstick', blog.id) }}"
+                    >置顶到首页</a>
+            {% endif %}
+        {% endif %}
+
         {% if blog.created_by(user) %}
         <a href="/t/edit/{{ blog.id }}" class="fr ml15">编辑</a>
         {% endif %}
@@ -101,7 +147,7 @@
 
 {% set comments_count = paginator.count%}
 {% if comments_count %}
-<div class="topic-reply container-box mt10">
+<div class="topic-reply white-bg shadow mt10">
     <div class="ui-header">
         <span>{{ comments_count }}&nbsp;条评论&nbsp;|&nbsp;直到&nbsp;{{ latest_comment.created|datetime }}</span>
     </div>
@@ -132,17 +178,21 @@
         </div>
         {% endfor %}
     </div>
-    <div class="ui-footer">
+</div>
+
+<div class="clearfix">
+    <div class="fr">
         {{page_obj|paginate}}
     </div>
 </div>
+
 {% else %}
 <div class="alert mt20 no-replies">
     暂无评论，说出你的观点吧
 </div>
 {% endif %}
 
-<div class="topic-reply-create container-box mt10" id="replyform">
+<div class="topic-reply-create white-bg shadow p10 mt10" id="replyform">
     {% if user.is_authenticated() %}
     <div class="ui-header">
         <span class="title">创建新的评论</span>

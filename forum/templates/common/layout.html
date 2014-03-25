@@ -44,106 +44,85 @@
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top top-navbar">
+
+<div class="navbar navbar-fixed-top top-navbar">
     <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="{{url('index')}}">F2E</a>
-
-            <div class="divider-vertical"></div>
-            {% if user.is_authenticated() %}
-            {% set notifications_count = user.unread_notifications().count() %}
-            {% if  notifications_count %}
-            <a href="{{ url('notifications') }}" class="notification-indicator tooltipped downwards contextually-unread"
-               title="{{ user.username }}，你有{{ notifications_count }}条未读提醒，去看看吧">
-                <span class="mail-status unread"></span>
-            </a>
-            {% else %}
-            <a href="{{ url('notifications') }}" class="notification-indicator tooltipped downwards" title="暂时没有未读提醒">
-                <span class="mail-status"></span>
-            </a>
-            {% endif %}
-            <div class="divider-vertical"></div>
-            {% endif %}
-            <div class="nav-collapse collapse">
-
-                {% set navigation_bar = [
-                (url('topic_list'), 'topics', '社区'),
-                (url('blog_list'), 'blogs', '文章'),
-                ('/static/pages/timeline/index.html', 'timeline', '大事记'),
-                ('/static/pages/nav/index.html', 'nav', '导航'),
-                ] -%}
-
-                {% set active_page = active_page or 'index' -%}
-
-                <ul class="nav">
-                    {% for href, id, caption in navigation_bar %}
-                    <li
-                    {% if id == active_page %} class="active"{% endif %}>
-                    <a href="{{ href|e }}">{{ caption|e }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
+        <div class="container container-fluid">
+            <div class="messages">
+                {{ messages|dump_messages }}
+                {% if form %}
+                    {{form.errors|dump_errors}}
+                {% endif %}
             </div>
-            <!--/.nav-collapse -->
-            <form class="navbar-search pull-left J_search">
-                <input type="text" class="search-query" placeholder="搜索">
-            </form>
-            <div class="nav-collapse collapse pull-right">
-                <ul class="nav account-menu">
-                    {% if user.is_authenticated() %}
-                    <li>
-                        <a href="{{ url('user', name=user.get_username()) }}" class="avatar">
-                            <img src="{{ user.avatar.small.url}}"
-                                 width="20" height="20">
-                        </a>
-                    </li>
-                    <li><a href="{{ user.get_absolute_url() }}">{{ user.get_username() }}</a>
-                    </li>
-                    <li>
-                        <a href="/setting">
-                            <span class="octicon octicon-tools"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('logout') }}">
-                            <span class="octicon octicon-log-out"></span>
-                        </a>
-                    </li>
-                    {% else %}
-                    <li>
-                        <a href="{{url('login')}}">
-                            <span class="octicon octicon-log-in"></span>
-                        </a>
-                    </li>
-                    <li><a href="{{url('register')}}" class="btn btn-small">注册</a></li>
-                    {% endif %}
-                </ul>
+
+            <div class="brand">
+                <img src="" alt="" width="170" height="54"/>
             </div>
+            <ul class="nav pull-right">
+                <li class="{% if tab=='index' %}active{% endif %}">
+                    <a href="{{ url('index') }}">首页</a>
+                </li>
+                <li class="{% if tab=='forum' %}active{% endif %}">
+                    <a href="{{ url('topic_list') }}">论坛</a>
+                </li>
+                <li class="{% if tab=='blog' %}active{% endif %}">
+                    <a href="{{ url('blog_list') }}">博客</a>
+                </li>
+                <li class="{% if tab=='stats' %}active{% endif %}">
+                    <a href="">指标</a>
+                </li>
+                {% if not user.is_authenticated() %}
+                <li>
+                    <a href="{{ url('register') }}" rel="nofollow">注册</a>
+                </li>
+                <li>
+                    <a href="{{ url('login') }}" rel="nofollow">登录</a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{{ url('logout') }}" rel="nofollow">退出</a>
+                </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </div>
 
-<div class="container-fluid container mt15">
-    {{ messages|dump_messages }}
-    {% if form %}
-        {{form.errors|dump_errors}}
-    {% endif %}
-    {% block messages %}
 
-    {% endblock %}
-
-    <div class="row-fluid">
-        <div class="span9 left">
-            {% block main %}{% endblock %}
+<div class="page-header">
+    <div class="container container-fluid">
+        <div class="page-header-inner shadow">
+            {% block header %}
+                <div class="container-fluid p24 pt10 pb10">
+                    <div class="row-fluid pr">
+                        <div class="span9 left-block">
+                            {% block header_left %}{% endblock %}
+                        </div>
+                        <div class="span3 right-block">
+                            <form action="" class="form-search J_search">
+                                <input type="search" class="input-medium search-query"/>
+                                <input type="submit" value="搜索" class="btn"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
         </div>
+    </div>
+</div>
 
-        <div class="span3 right">
+<div class="container-fluid container">
+    <div class="page-main shadow">
+        {% block top%}{% endblock %}
+        <div class="row-fluid">
+            <div class="span9 left-block">
+            {% block main %}{% endblock %}
+            </div>
+
+            <div class="span3 right-block">
             {% block sidebar %}{% endblock %}
+
+            </div>
         </div>
     </div>
 </div>

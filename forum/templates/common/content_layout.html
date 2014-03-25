@@ -2,26 +2,34 @@
 
 {% block sidebar %}
 {% if user.is_authenticated() %}
-<div class="usercard container-box">
-    <div class="ui-header vc">
-        <a href="{{ url('user', user.get_username()) }}">
-            <img src="{{ user.avatar.small.url }}" alt="{{ user.get_username() }}"
-                 class="avatar"/>
-        </a>
+<div class="usercard white-bg shadow">
+    <div class="ui-header p10">
+        <div class="vc clearfix">
+            <a href="{{ url('user', user.get_username()) }}">
+                <img src="{{ user.avatar.small.url }}" alt="{{ user.get_username() }}"
+                     class="avatar"/>
+            </a>
 
-        <div class="username vc-inner"><a href="{{ url('user', user.username) }}">{{ user.get_username() }}</a></div>
+            <div class="username vc-inner"><a href="{{ url('user', user.username) }}">{{ user.get_username() }}</a></div>
+        </div>
+        <div class="member-stats clearfix">
+            <div class="status status-collects">
+                <a href="{{ url('my_nodes') }}"><strong>{{ user.n_collects }}</strong> 节点收藏</a>
+            </div>
+            <div class="status status-favourites">
+                <a href="{{ url('my_topics') }}"><strong>{{ user.n_favourites }}</strong> 主题收藏</a>
+            </div>
+            <div class="status status-followings">
+                <a href="{{ url('my_followings') }}"><strong>{{ user.n_followings }}</strong> 特别关注</a>
+            </div>
+        </div>
     </div>
-    <div class="ui-content">
-        <div class="status status-collects">
-            <a href="{{ url('my_nodes') }}"><strong>{{ user.n_collects }}</strong> 节点收藏</a>
-        </div>
-        <div class="status status-favourites">
-            <a href="{{ url('my_topics') }}"><strong>{{ user.n_favourites }}</strong> 主题收藏</a>
-        </div>
-        <div class="status status-followings">
-            <a href="{{ url('my_followings') }}"><strong>{{ user.n_followings }}</strong> 特别关注</a>
-        </div>
+
+    {% if user.is_authenticated() %}
+    <div class="ui-content p10">
+        <a href="{{ url('notifications') }}">{{ user.unread_notifications().count() }} 条未读提醒</a>
     </div>
+    {% endif %}
 </div>
     {% if 0 %}
     <div class="alert mt10 mb10">
@@ -32,7 +40,7 @@
     </div>
     {% endif %}
 {% else %}
-<div class="login-box container-box">
+<div class="login-box white-bg shadow">
     <div class="ui-content tc">
         <a class="btn btn-small mr10" type="button" href="{{url('login')}}">登录</a>
         <a class="btn btn-small mr10" type="button" href="{{url('register')}}">注册</a>

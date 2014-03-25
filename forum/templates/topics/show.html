@@ -78,8 +78,14 @@
 </script>
 {% endblock %}
 
+{% block header_left %}
+<div class="title">
+    <span class="bread-nav">F2E › <a href="{{url('node', topic.node.slug)}}">{{ topic.node.name }}</a></span>
+</div>
+{% endblock %}
+
 {% block main %}
-<div class="topic-detail container-box">
+<div class="topic-detail white-bg shadow">
     <div class="ui-header">
         <a href="{{ topic.author.get_absolute_url() }}">
             <img src="{{ topic.author.avatar.medium.url }}" width="73" height="73"
@@ -87,8 +93,7 @@
         </a>
 
         <div class="main">
-            <span class="bread-nav">F2E › <a href="{{url('node', topic.node.slug)}}">{{ topic.node.name }}</a></span>
-            <h3 class="title">{{ topic.title }}</h3>
+            <h2 class="title">{{ topic.title }}</h2>
 
             <div class="meta">
                 <span class="node"><a href="{{ topic.node.get_absolute_url() }}">{{ topic.node.name }}</a></span> •
@@ -116,22 +121,26 @@
         {{ topic.content|markdown|content_process|safe }}
     </div>
     <div class="ui-footer">
-        {% if not topic.favourited_by(user) %}
-        <a href="javascript:void(0)" class="J_topicFavorite mr15" data-type="fav"
-           data-fav-url="{{ url('topic_favourite', topic.id) }}"
-           data-unfav-url="{{ url('topic_unfavourite', topic.id) }}">加入收藏</a>
-        {% else %}
-        <a href="javascript:void(0)" class="J_topicFavorite mr15" data-type="unfav"
-           data-fav-url="{{ url('topic_favourite', topic.id) }}"
-           data-unfav-url="{{ url('topic_unfavourite', topic.id) }}"
-                >取消收藏</a>
-        {% endif %}
         <a href="#" class="mr15"
            onclick="window.open('http://service.weibo.com/share/share.php?url={{ request.build_absolute_uri(topic.get_absolute_url()) }}&title=F2E%20-%20{{ topic.title }}', '_blank', 'width=550, height=370');">
             新浪微博</a>
-        {% if topic.created_by(user) %}
-        <a href="/t/edit/{{ topic.id }}" class="fr ml15">编辑主题</a>
+        {% if user.is_authenticated() %}
+            {% if not topic.favourited_by(user) %}
+            <a href="javascript:void(0)" class="J_topicFavorite mr15" data-type="fav"
+               data-fav-url="{{ url('topic_favourite', topic.id) }}"
+               data-unfav-url="{{ url('topic_unfavourite', topic.id) }}">加入收藏</a>
+            {% else %}
+            <a href="javascript:void(0)" class="J_topicFavorite mr15" data-type="unfav"
+               data-fav-url="{{ url('topic_favourite', topic.id) }}"
+               data-unfav-url="{{ url('topic_unfavourite', topic.id) }}"
+                    >取消收藏</a>
+            {% endif %}
+
+            {% if topic.created_by(user) %}
+            <a href="/t/edit/{{ topic.id }}" class="fr ml15">编辑主题</a>
+            {% endif %}
         {% endif %}
+
         <div class="favourites fr ml15">{{ topic.n_favourites }} 人收藏</div>
         <span class="hits fr">{{ topic.n_hits }} 次点击</span>
     </div>
@@ -139,7 +148,7 @@
 
 {% set replies_count = page.paginator.count%}
 {% if replies_count %}
-<div class="topic-reply container-box mt10">
+<div class="topic-reply white-bg shadow mt10">
     <div class="ui-header">
         <span>{{ replies_count }}&nbsp;条回复&nbsp;|&nbsp;直到&nbsp;{{ latest_reply.created|datetime }}</span>
     </div>
@@ -170,7 +179,10 @@
         </div>
         {% endfor %}
     </div>
-    <div class="ui-footer">
+</div>
+
+<div class="clearfix">
+    <div class="fr">
         {{page|paginate}}
     </div>
 </div>
@@ -180,7 +192,7 @@
 </div>
 {% endif %}
 
-<div class="topic-reply-create container-box mt10" id="replyform">
+<div class="topic-reply-create white-bg shadow mt10 p10" id="replyform">
     {% if user.is_authenticated() %}
     <div class="ui-header">
         <span class="title">创建新的回复</span>

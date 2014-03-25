@@ -1,6 +1,8 @@
 # coding: utf8
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.list import ListView
+from django.views.generic.base import View
+from braces.views import LoginRequiredMixin, JSONResponseMixin
 from forum.models import Blog
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -40,6 +42,11 @@ class BlogListView(ListView):
     def get_queryset(self):
         return Blog.objects.order_by('-id')
 
+    def get_context_data(self, **kwargs):
+        ctx = super(BlogListView, self).get_context_data(**kwargs)
+        ctx['tab'] = 'blog'
+        return ctx
+
 
 @require_POST
 @login_required
@@ -53,3 +60,29 @@ def comment(request, id):
     messages.success(request, '评论成功')
     b.new_comment(content=content, author=request.user)
     return redirect(b)
+
+
+class StickView(View, LoginRequiredMixin, JSONResponseMixin):
+    http_method_names = ['post']
+
+    def post(self, request, id):
+        if not request.user.is_superuser:
+            return self.render_json_response('permission denied', 403)
+        t = get_object_or_404(Blog, pk=id)
+        t.stick()
+        return self.render_json_response({
+            'status': 'ok'
+        })
+
+
+class UnstickView(View, LoginRequiredMixin, JSONResponseMixin):
+    http_method_names = ['post']
+
+    def post(self, request, id):
+        if not request.user.is_superuser:
+            return self.render_json_response('permission denied', 403)
+        t = get_object_or_404(Blog, pk=id)
+        t.unstick()
+        return self.render_json_response({
+            'status': 'ok'
+        })

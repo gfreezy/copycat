@@ -58,21 +58,11 @@
     <div class="inner">
     </div>
   </div>
-  */ }
-  .vc:before {
-    content: "";
-    height: 100%;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: -0.25em; }
+  */
+  display: table; }
   .vc > .vc-inner {
-    display: inline-block;
+    display: table-cell;
     vertical-align: middle; }
-
-.fill {
-  position: absolute;
-  top: 0;
-  bottom: 0; }
 
 .tl {
   text-align: left; }

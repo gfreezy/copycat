@@ -1,49 +1,85 @@
-<!DOCTYPE HTML>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
-    <meta content="yes" name="apple-mobile-web-app-capable"/>
-    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
-    <meta name="format-detection" content="telephone=no"/>
-    <title>{% block title %}F2E - 前端技术社区{% endblock %}</title>
-    <script type="text/javascript" src="/static/js/base/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="/static/js/base/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/static/js/base/in-min.js"></script>
-    <script type="text/javascript" src="/static/js/base/jquery.cookie.js"></script>
-    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.min.css"/>
-    {% compressed_css 'main' %}
-    <link rel="apple-touch-icon" href="/static/images/f2e.im.icon.png">
-</head>
-<body>
+{% import 'common/topics.html' as topics_util %}
+{% import 'common/blogs.html' as blogs_util %}
+{% extends 'common/layout.html' %}
 
-<div class="navbar navbar-inverse navbar-fixed-top top-navbar">
-    <div class="navbar-inner">
+{% block header %}
+<div class="row-fluid">
+    <div class="span7">
+        <div id="myCarousel" class="carousel slide">
+          <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+          </ol>
+            <div class="carousel-inner">
+                {% for b in sticks %}
+                  <div class="item {% if loop.first %}active{% endif %}">
+                    <a href="{{ b.get_absolute_url() }}"><img src="{{ b.cover.cover.url }}" alt=""></a>
+                    <div class="carousel-caption">
+                      <h4><a href="{{ b.get_absolute_url() }}">{{ b.title }}</a></h4>
+                      <p>{{ b.content|truncate(70, True) }}</p>
+                    </div>
+                  </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="span5"></div>
+</div>
+{% endblock %}
+
+
+{% block top %}
+<div class="scrollable-calendar">
+    <div class="ui-header sep">滚动日历</div>
+    <div class="ui-content">
 
     </div>
 </div>
+{% endblock %}
 
-<div class="container-fluid container mt15">
-    {{ messages|dump_messages }}
-    {% if form %}
-        {{form.errors|dump_errors}}
-    {% endif %}
-    {% block messages %}
 
-    {% endblock %}
-
-    <div class="row-fluid">
-        <div class="span9 left">
-            {% block main %}{% endblock %}
+{% block main %}
+    <div class="whats-new">
+        <div class="ui-header sep">
+            最新
         </div>
-
-        <div class="span3 right">
-            {% block sidebar %}{% endblock %}
+        <div class="ui-content">
+            <div class="topics">
+                {{ topics_util.topics(new) }}
+            </div>
         </div>
     </div>
+
+    <div class="recent-blogs">
+        <div class="ui-header sep">
+            信息要闻
+        </div>
+        <div class="ui-content">
+            <div class="blogs">
+                {{ blogs_util.blogs(blogs) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    <div class="sidebox hot white-bg shadow">
+        <div class="ui-header">
+            <span class="title">热点</span>
+        </div>
+        <div class="ui-content">
+        </div>
+    </div>
+
+<div class="sidebox hot-nodes shadow white-bg">
+    <div class="ui-header">
+        <span class="title">最热节点</span>
+    </div>
+    <div class="ui-content p10">
+        {% for node in hot_nodes %}
+        <a href="{{ url('node', node.slug) }}">{{ node.name }}</a>
+        {% endfor %}
+    </div>
 </div>
-
-{% include 'common/footer.html' %}
-
-</body>
-</html>
+{% endblock %}
