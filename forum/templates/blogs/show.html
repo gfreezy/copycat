@@ -4,22 +4,7 @@
 {{ blog.title }} - F2E
 {% endblock %}
 
-{% block stylesheet %}
-<link rel="stylesheet" href="/static/css/codehilite.css"/>
-{% endblock %}
-
 {% block javascript %}
-<script type="text/javascript" src="/static/js/widget/emmet.min.js"></script>
-<script type="text/javascript" src="/static/js/widget/jquery.textarea.min.js"></script>
-<script type="text/javascript">
-    jQuery(document).ready(function () {
-        $('textarea.smart-code-support').tabby();
-        emmet.require('textarea').setup({
-            pretty_break: false, // enable formatted line breaks (when inserting // between opening and closing tag)
-            use_tab: false       // expand abbreviations by Tab key
-        });
-    });
-</script>
 <script type="text/javascript">
     jQuery(document).ready(function () {
         $('.J_replyTo').click(function (e) {
@@ -78,7 +63,11 @@
 {% endblock %}
 
 {% block header_left %}
-    <span class="bread-nav title">F2E › blog</span>
+    <div class="title">
+        <div class="bread-nav">
+            <a href="{{ url('index') }}">首页</a> › <a href="{{ url('blog_list') }}">信息要闻</a> › {{ blog.title|truncate(20, True) }}
+        </div>
+    </div>
 {% endblock %}
 
 {% block main %}

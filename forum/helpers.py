@@ -2,6 +2,7 @@
 import re
 import pytz
 import django.utils.timezone
+import bleach
 from datetime import datetime
 from jingo import register, env
 from jinja2.utils import Markup
@@ -128,6 +129,8 @@ def paginate(page, url_pattern='?page=%s', list_rows=10):
     }))
 
 
+_paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
+
 @register.filter
 def content_process(content):
     # render content included gist
@@ -141,6 +144,7 @@ def content_process(content):
     content = re.sub(r'http://v.youku.com/v_show/id_(\w+).html',
                      r'<iframe height=498 width=510 src="http://player.youku.com/embed/\1" frameborder=0 allowfullscreen style="width:100%;max-width:510px;"></iframe>',
                      content)
+    content = u'\n\n'.join(u'<p>%s</p>' % p.replace('\n', '<br>\n') for p in _paragraph_re.split(content))
     return content
 
 
@@ -182,3 +186,31 @@ def dump_messages(messages):
 @register.filter
 def css(field, arg):
     return field.as_widget(attrs={'class': arg})
+
+
+ALLOWED_TAGS = [
+    'a',
+    'blockquote',
+    'li',
+    'ol',
+    'p',
+    'div',
+    'span',
+    'ul',
+    'br',
+    'img',
+]
+
+ALLOWED_ATTRIBUTES = {
+    '*': ['style'],
+    'a': ['href', 'title', 'target'],
+    'img': ['src', 'title'],
+}
+
+ALLOWED_STYLES = ['font', 'font-weight', 'font-size', 'font-style', 'text-align', 'text-decoration',
+                  'line-height', 'width', 'height', 'color']
+
+
+@register.filter
+def sanitize(text):
+    return Markup(bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, styles=ALLOWED_STYLES))

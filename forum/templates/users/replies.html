@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block header_left %}
-    <span class="title bread-nav">F2E > {{ owner.username }} > 回复列表</span>
+    <div class="title">
+        <div class="bread-nav">
+            <a href="{{ url('index') }}">首页</a> › .<a href="{{ url('user', owner.id) }}">{{ owner.username }}</a> › 回复列表
+        </div>
+    </div>
 {% endblock %}
 
 

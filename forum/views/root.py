@@ -1,4 +1,6 @@
+import requests
 from django.shortcuts import render
+from django.http import HttpResponse
 from forum.models import Node, Topic, Plane, User, Reply, Blog
 
 
@@ -16,3 +18,8 @@ def index(request):
         'hot_nodes': hot_nodes,
         'tab': 'index',
     })
+
+
+def proxy(request, url):
+    res = requests.get(url)
+    return HttpResponse(content=res.content, status=res.status_code, content_type=res.headers['Content-Type'])

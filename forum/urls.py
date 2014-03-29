@@ -3,6 +3,7 @@ import forum.views.users
 import forum.views.nodes
 import forum.views.blogs
 import forum.views.root
+import forum.views.pages
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
 from forum.views.auth import RegisterView, AuthenticationForm
@@ -72,4 +73,9 @@ urlpatterns = patterns(
     url(r'^blog/list$', forum.views.blogs.BlogListView.as_view(), name='blog_list'),
     url(r'^stick/(?P<id>\w+)$', forum.views.blogs.StickView.as_view(), name='blog_stick'),
     url(r'^unstick/(?P<id>\w+)$', forum.views.blogs.UnstickView.as_view(), name='blog_unstick'),
+
+    # other
+    url(r'^calendar$', forum.views.pages.calendar, name='calendar'),
+
+    url(r'^proxy/(?P<url>.*)', forum.views.root.proxy, name='proxy'),
 )

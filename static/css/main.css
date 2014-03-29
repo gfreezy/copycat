@@ -572,9 +572,6 @@ a {
 .btn-small {
   font-size: 12px; }
 
-.btn {
-  color: #666 !important; }
-
 .navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container,
@@ -582,7 +579,7 @@ a {
 .navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
-  width: 960px; }
+  width: 1160px; }
 
 .messages {
   position: absolute;
@@ -626,6 +623,8 @@ a {
     .page-header .page-header-inner .title {
       line-height: 30px;
       font-size: 15px; }
+      .page-header .page-header-inner .title a {
+        color: #000000; }
   .page-header .carousel {
     margin-bottom: 0; }
     .page-header .carousel a {
@@ -664,11 +663,6 @@ a {
 
 .scrollable-calendar {
   padding: 0; }
-
-.row-fluid .left-block {
-  width: 70.468%; }
-.row-fluid .right-block {
-  width: 27.404%; }
 
 .topics {
   padding: 0; }
@@ -1114,6 +1108,9 @@ a {
   .topic-reply-create form textarea {
     width: 635px;
     height: 230px; }
+.topic-reply-create .ui-header {
+  border: none;
+  padding-bottom: 3px; }
 .topic-reply-create .ui-content {
   padding: 5px 0 0; }
 

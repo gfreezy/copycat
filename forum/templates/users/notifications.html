@@ -5,13 +5,17 @@
 {% endblock %}
 
 {% block header_left %}
-    <span class="bread-nav title">F2E › 消息提醒</span>
-    {% if user.unread_notifications().count() %}
+    <div class="title">
+        <div class="bread-nav">
+            <a href="{{ url('index') }}">首页</a> › 消息提醒
+        </div>
+        {% if user.unread_notifications().count() %}
         <form class="fr" method="post">
             {{ csrf() }}
             <input type="submit" value="全部标记为已读" class="btn btn-small"/>
         </form>
-    {% endif %}
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block main %}

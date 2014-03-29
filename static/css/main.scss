@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-@import 'compass/_css3';
+@import 'compass/css3/border-radius';
 @import 'base/octicons';
 @import "scut";
 
@@ -19,10 +19,6 @@ a {
   font-size: 12px;
 }
 
-.btn {
-  color: #666 !important;
-}
-
 .navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container,
@@ -30,7 +26,7 @@ a {
 .navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
-  width: 960px;
+  width: 1160px;
 }
 
 .messages {
@@ -83,6 +79,9 @@ a {
     .title {
       line-height: 30px;
       font-size: 15px;
+      a {
+        color: #000000;
+      }
     }
   }
 
@@ -140,17 +139,6 @@ a {
 .scrollable-calendar {
   padding: 0;
 }
-
-.row-fluid {
-  .left-block {
-    width: 70.468%;
-  }
-
-  .right-block {
-    width: 27.404%;
-  }
-}
-
 
 .topics {
   padding: 0;
@@ -793,6 +781,7 @@ a {
 
   .ui-footer {
     .pagination {
+
       margin: 5px 15px 10px 10px;
       float: right;
 
@@ -836,11 +825,15 @@ a {
       height: 230px;
     }
   }
-
+  .ui-header {
+    border: none;
+    padding-bottom: 3px;
+  }
   .ui-content {
     //padding: 10px 0;
     padding: 5px 0 0;
   }
+
 }
 
 .errors {

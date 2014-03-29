@@ -1,9 +1,12 @@
-{% import 'common/topics.html' as topics_util %}
 {% extends 'common/content_layout.html' %}
+{% import 'common/topics.html' as topics_util %}
 
 {% block header_left %}
-
-    <span class="title bread-nav">F2E › 我收藏的主题列表</span>
+    <div class="title">
+        <div class="bread-nav">
+            <a href="{{ url('index') }}">首页</a> › 我收藏的主题列表
+        </div>
+    </div>
 {% endblock %}
 
 {% block main %}

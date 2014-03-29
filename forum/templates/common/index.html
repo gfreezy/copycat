@@ -7,14 +7,14 @@
     <div class="span7">
         <div id="myCarousel" class="carousel slide">
           <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1"></li>
-            <li data-target="#myCarousel" data-slide-to="2"></li>
+              {% for i in sticks %}
+                <li data-target="#myCarousel" data-slide-to="{{ loop.index0 }}" class="{% if loop.first %}active {% endif %}"></li>
+              {% endfor %}
           </ol>
             <div class="carousel-inner">
                 {% for b in sticks %}
                   <div class="item {% if loop.first %}active{% endif %}">
-                    <a href="{{ b.get_absolute_url() }}"><img src="{{ b.cover.cover.url }}" alt=""></a>
+                    <a href="{{ b.get_absolute_url() }}"><img src="{{ b.cover.thumb.url }}" alt=""></a>
                     <div class="carousel-caption">
                       <h4><a href="{{ b.get_absolute_url() }}">{{ b.title }}</a></h4>
                       <p>{{ b.content|truncate(70, True) }}</p>
@@ -82,4 +82,13 @@
         {% endfor %}
     </div>
 </div>
+
+<div class="ad-box ad-side shadow">
+    <iframe frameborder="0" width="355" height="380" scrolling="no" src="{{ url('proxy', 'http://markets.wallstreetcn.com/embed/sidebar?width=335') }}"></iframe>
+</div>
+<script>
+$('iframe').one('load', function() {
+    $(this).contents().find('.iframe').css('background-color', 'transparent');
+})
+</script>
 {% endblock %}

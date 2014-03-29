@@ -37,7 +37,11 @@
 
 
 {% block header_left %}
-<div class="title">F2E > {{ owner.username }}</div>
+    <div class="title">
+        <div class="bread-nav">
+            <a href="{{ url('index') }}">首页</a> › {{ owner.username }}
+        </div>
+    </div>
 {% endblock %}
 
 {% block main %}

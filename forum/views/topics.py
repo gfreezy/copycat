@@ -119,10 +119,11 @@ def reply(request, id):
     return redirect(t)
 
 
-class NewView(CreateView, LoginRequiredMixin):
+class NewView(LoginRequiredMixin, CreateView):
     template_name = 'topics/new.html'
     model = Topic
     form_class = TopicForm
+
 
     def form_valid(self, form):
         slug = self.kwargs['slug']
@@ -131,3 +132,11 @@ class NewView(CreateView, LoginRequiredMixin):
         form.instance.node = node
         messages.success(self.request, '主题创建成功')
         return super(NewView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        node = get_object_or_404(Node, slug=self.kwargs['slug'])
+        ctx = super(NewView, self).get_context_data(**kwargs)
+        ctx['node'] = node
+        return ctx
+
+

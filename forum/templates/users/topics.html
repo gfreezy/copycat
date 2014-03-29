@@ -2,7 +2,11 @@
 {% extends 'common/content_layout.html' %}
 
 {% block header_left %}
-    <span class="title bread-nav">F2E > {{ owner.username }} > 主题列表</span>
+    <div class="title">
+        <div class="bread-nav">
+            <a href="{{ url('index') }}">首页</a> › <a href="{{ url('user', owner.username) }}">{{ owner.username }}</a> › 主题列表
+        </div>
+    </div>
 {% endblock %}
 
 {% block main %}

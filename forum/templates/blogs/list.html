@@ -2,7 +2,11 @@
 {% import 'common/blogs.html' as blogs_util %}
 
 {% block header_left %}
-    <div class="title">信息要闻</div>
+    <div class="title">
+        <div class="bread-nav">
+            <a href="{{ url('index') }}">首页</a> › 信息要闻
+        </div>
+    </div>
 {% endblock %}
 {% block main %}
 <div class="blogs">

@@ -458,10 +458,10 @@ class Blog(models.Model):
     cover = EnhancedImageField(
         upload_to=lambda _, filename: filepath('user', filename),
         default='user/2014/03/5f050d0cd1b9d93b5db499cd6a70e0bf.jpg',
-        process_source=dict(size=(646, 646), sharpen=True),
+        process_source=dict(size=(733, 412), sharpen=True),
         thumbnails={
-            'thumb': dict(size=(646, 190), sharpen=True, upscale=True),
-            'cover': dict(size=(550, 310), sharpen=True, upscale=True),
+            'strip': dict(size=(733, 231), sharpen=True, upscale=True),
+            'thumb': dict(size=(550, 412), sharpen=True, upscale=True),
         }
     )
     n_comments = models.IntegerField(default=0, editable=False)
