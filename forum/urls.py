@@ -45,6 +45,7 @@ urlpatterns = patterns(
     # topic
     url(r'^list/topics', forum.views.topics.TopicListView.as_view(), name='topic_list'),
     url(r'^t/(?P<id>\d+)$', forum.views.topics.show, name='topic'),
+    url(r'^t/(?P<id>\d+)/edit$', forum.views.topics.EditView.as_view(), name='topic_edit'),
     url(r'^favourite/(?P<id>\d+)$', forum.views.topics.FavouriteView.as_view(), name='topic_favourite'),
     url(r'^unfavourite/(?P<id>\d+)$', forum.views.topics.UnfavouriteView.as_view(), name='topic_unfavourite'),
     url(r'^reply/(?P<id>\d+)$', forum.views.topics.reply, name='reply'),

@@ -126,7 +126,7 @@
             {% endif %}
 
             {% if topic.created_by(user) %}
-            <a href="/t/edit/{{ topic.id }}" class="fr ml15">编辑主题</a>
+            <a href="{{ url('topic_edit', topic.id) }}" class="fr ml15">编辑主题</a>
             {% endif %}
         {% endif %}
 

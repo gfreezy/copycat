@@ -4,13 +4,13 @@
 {% if user.is_authenticated() %}
 <div class="usercard white-bg shadow">
     <div class="ui-header p10">
-        <div class="vc clearfix">
+        <div class="clearfix">
             <a href="{{ url('user', user.get_username()) }}">
                 <img src="{{ user.avatar.small.url }}" alt="{{ user.get_username() }}"
                      class="avatar"/>
             </a>
 
-            <div class="username vc-inner"><a href="{{ url('user', user.username) }}">{{ user.get_username() }}</a></div>
+            <div class="username"><a href="{{ url('user', user.username) }}">{{ user.get_username() }}</a></div>
         </div>
         <div class="member-stats clearfix">
             <div class="status status-collects">
@@ -49,5 +49,75 @@
 </div>
 {% endif %}
 
+<div class="sidebox hot white-bg shadow">
+    <div class="ui-header">
+        <span class="title">最新主题</span>
+    </div>
+    <div class="ui-content p10">
+        <div class="simple-topics">
+        {% for topic in latest_topics %}
+            <div class="topic-item">
+                <div class="avatar">
+                    <a href="{{ url('user', topic.author.username) }}">
+                        <img src="{{ topic.author.avatar.small.url }}" alt="{{ topic.author.userame }}" width="32" height="32"/>
+                    </a>
+                </div>
+                <div class="title">
+                    <a href="{{ url('topic', id=topic.id) }}">{{ topic.title }}</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
 
+<div class="sidebox hot-nodes shadow white-bg">
+    <div class="ui-header">
+        <span class="title">最热节点</span>
+    </div>
+    <div class="ui-content p10">
+        {% for node in hot_nodes %}
+        <a href="{{ url('node', node.slug) }}">{{ node.name }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+
+<div class="sidebox shadow">
+    <iframe frameborder="0" width="355" height="380" scrolling="no" src="{{ url('proxy', 'http://markets.wallstreetcn.com/embed/sidebar?width=335') }}"></iframe>
+    <script>
+    $('iframe').one('load', function() {
+        $(this).contents().find('.iframe').css('background-color', 'transparent');
+    })
+    </script>
+</div>
+
+
+<div class="central-banks sidebox shadow white-bg">
+    <div class="ui-header">
+        <span class="title">央行汇率</span>
+    </div>
+    <div class="ui-content p10">
+        <table class="w">
+            <thead>
+            <tr>
+                <td>央行</td>
+                <td class="tr">利率</td>
+                <td class="tr">下次会议</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for bank in central_banks %}
+                <tr>
+                    <td>&nbsp;&nbsp;<span class="ceFlags {{ bank.name }}">&nbsp;</span>
+                        <a href="{{ bank.url }}" rel="nofollow" target="_blank">{{ bank.bank }}</a>
+                    </td>
+                    <td class="tr">{{ bank.rate }}</td>
+                    <td class="tr">{{ bank.next_metting }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

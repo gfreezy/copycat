@@ -70,10 +70,20 @@ class User(AbstractUser):
     favourite_topics = models.ManyToManyField('Topic', through='Favourite',
                                               related_name='favouriting_users',
                                               related_query_name='user')
+
+    last_active_time = models.DateTimeField(auto_now=True, db_index=True)
     objects = UserManager()
+
+    @classmethod
+    def hot(cls, n=6):
+        return cls.objects.order_by('-last_active_time')[:n]
 
     def get_absolute_url(self):
         return reverse('user', kwargs={'name': self.username})
+
+    def update_active_time(self):
+        self.last_active_time = timezone.now()
+        self.save()
 
     def favourite(self, topic):
         if topic._favourite(self):
@@ -227,8 +237,8 @@ class Topic(models.Model):
     node = models.ForeignKey(Node)
     author = models.ForeignKey(User)
 
-    last_active_time = models.DateTimeField(auto_now=True)
-    created = models.DateTimeField(auto_now_add=True)
+    last_active_time = models.DateTimeField(auto_now=True, db_index=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)
 
     def __unicode__(self):
@@ -253,6 +263,8 @@ class Topic(models.Model):
             self.last_active_time = reply.created
             self.save()
 
+            author.update_active_time()
+
             if self.author != author:
                 # Not create notification for self's reply
                 Notification.notify_reply(author, self.author, self, reply)
@@ -262,6 +274,7 @@ class Topic(models.Model):
                 if u == author:
                     continue
                 Notification.notify_mention(author, u, self, reply)
+
         return reply
 
     def _favourite(self, by):
@@ -327,6 +340,8 @@ class Collect(models.Model):
 
 
 class Notification(models.Model):
+    class Meta:
+        index_together = (('receiver', 'status', 'id'), )
     MENTION = 0
     REPLY = 1
     FOLLOW = 2
@@ -497,6 +512,7 @@ class Blog(models.Model):
         self.n_comments += 1
         self.save()
 
+        author.update_active_time()
         if self.author != author:
             # Not create notification for self's reply
             Notification.notify_reply(author, self.author, self, c)
@@ -536,3 +552,38 @@ class StickBlog(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)
 
+
+class EconomicEvent(models.Model):
+    time = models.DateTimeField()
+    flag_cur = models.CharField(max_length=20)
+    txt_num = models.CharField(max_length=20)
+    event = models.CharField(max_length=200)
+    act = models.CharField(max_length=20, blank=True)
+    fore = models.CharField(max_length=20, blank=True)
+    prev = models.CharField(max_length=20, blank=True)
+    ident = models.IntegerField(unique=True)
+
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=True)
+
+
+class Forex(models.Model):
+    time = models.DateTimeField()
+    title = models.CharField(max_length=20)
+    url = models.URLField()
+    ident = models.IntegerField(unique=True)
+
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=True)
+
+
+class CentralBank(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    bank = models.CharField(max_length=100)
+    url = models.URLField()
+    rate = models.CharField(max_length=20)
+    next_metting = models.CharField(max_length=200)
+    last_changed = models.CharField(max_length=200)
+
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=True)

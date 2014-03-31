@@ -42,17 +42,6 @@
 {% block sidebar %}
 {{ super() }}
 
-<div class="sidebox hot-nodes shadow white-bg">
-    <div class="ui-header">
-        <span class="title">最热节点</span>
-    </div>
-    <div class="ui-content p10">
-        {% for node in hot_nodes %}
-        <a href="{{ url('node', node.slug) }}">{{ node.name }}</a>
-        {% endfor %}
-    </div>
-</div>
-
 <div class="sidebox white-bg shadow community-status">
     <div class="ui-header">
         <span class="title">运行状态</span>

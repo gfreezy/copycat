@@ -1,12 +1,13 @@
 #coding: utf8
 from django import forms
+from django.core import exceptions
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.base import View, TemplateView
 from forum.models import Topic, Node, Plane, User, Reply
 from braces.views import LoginRequiredMixin, JSONResponseMixin
@@ -124,7 +125,6 @@ class NewView(LoginRequiredMixin, CreateView):
     model = Topic
     form_class = TopicForm
 
-
     def form_valid(self, form):
         slug = self.kwargs['slug']
         node = get_object_or_404(Node, slug=slug)
@@ -140,3 +140,18 @@ class NewView(LoginRequiredMixin, CreateView):
         return ctx
 
 
+class EditView(LoginRequiredMixin, UpdateView):
+    template_name = 'topics/edit.html'
+    model = Topic
+    form_class = TopicForm
+
+    def form_valid(self, form):
+        messages.success(self.request, '主题修改成功')
+        self.request.user.update_active_time()
+        return super(EditView, self).form_valid(form)
+
+    def get_object(self, queryset=Node):
+        topic = get_object_or_404(Topic, pk=self.kwargs['id'])
+        if topic.author != self.request.user and not self.request.user.is_superuser:
+            raise exceptions.PermissionDenied
+        return topic

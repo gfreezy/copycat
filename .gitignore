@@ -5,3 +5,5 @@ media/user
 media/node
 media/image
 .sass-cache/
+
+static/css/main.css
