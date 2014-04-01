@@ -555,6 +555,7 @@ class StickBlog(models.Model):
 
 class EconomicEvent(models.Model):
     time = models.DateTimeField()
+    country = models.CharField(max_length=100)
     flag_cur = models.CharField(max_length=20)
     txt_num = models.CharField(max_length=20)
     event = models.CharField(max_length=200)

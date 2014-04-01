@@ -1177,3 +1177,52 @@ input[type="color"],
     line-height: 32px;
   }
 }
+
+
+.events {
+  thead tr {
+    background-color: #CFCCCD;
+  }
+  tbody tr {
+    border-bottom: 1px solid #CECBCC;
+    &:hover {
+      background-color: #edf4fa;
+    }
+  }
+  .txtNum0, .txtNum1, .txtNum2, .txtNum3 {
+    background-position: 0 0;
+    vertical-align: middle;
+    width: 52px;
+    height: 12px;
+    display: inline-block;
+    background-image: url("/static/images/text_num.png");
+  }
+  .txtNum1 {
+    background-position: 0 -18px;
+  }
+  .txtNum2 {
+    background-position: 0 -36px;
+  }
+  .txtNum3 {
+    background-position: 0 -54px;
+  }
+}
+
+.scrollable-calendar {
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    li {
+      padding: 5px 10px;
+      margin-right: 5px;
+      margin-bottom: 5px;
+      background-color: #ffffff;
+      display: inline-block;
+    }
+  }
+}
+
+.sidebox.placeholder {
+  height: 11px;
+}

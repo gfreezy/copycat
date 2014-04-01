@@ -1,7 +1,7 @@
 import requests
 from django.shortcuts import render
 from django.http import HttpResponse
-from forum.models import Node, Topic, Plane, User, Reply, Blog
+from forum.models import Node, Topic, Blog, EconomicEvent
 
 
 def index(request):
@@ -16,6 +16,7 @@ def index(request):
         'blogs': blogs,
         'sticks': stick_blogs,
         'hot_nodes': hot_nodes,
+        'recent_events': EconomicEvent.objects.order_by('-time')[:10],
         'tab': 'index',
     })
 

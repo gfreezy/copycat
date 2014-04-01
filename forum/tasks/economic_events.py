@@ -30,6 +30,9 @@ def fetch_row_data(url=URL):
 
 def parse_row(row):
     time = row['event_timestamp']
+    classes = row.select('.flagCur')[0].contents[0]['class']
+    classes.remove('ceFlags')
+    country = classes[0]
     flag_cur = ''.join(row.select('.flagCur')[0].stripped_strings).replace('&nbsp;', '')
     txt_num = len(row.select('.textNum .grayFullBullishIcon'))
     event = ''.join(row.select('.event')[0].stripped_strings).replace('&nbsp;', '')
@@ -37,10 +40,10 @@ def parse_row(row):
     fore = ''.join(row.select('.fore')[0].stripped_strings).replace('&nbsp;', '')
     prev = ''.join(row.select('.prev')[0].stripped_strings).replace('&nbsp;', '')
 
-    return time, flag_cur, txt_num, event, act, fore, prev
+    return time, country, flag_cur, txt_num, event, act, fore, prev
 
 
-def create_event(time, flag_cur, txt_num, event, act, fore, prev):
+def create_event(time, country, flag_cur, txt_num, event, act, fore, prev):
     ident = hash('%s%s' % (time, event)) & 0xffffffff
     if EconomicEvent.objects.filter(ident=ident).count():
         return
@@ -50,7 +53,7 @@ def create_event(time, flag_cur, txt_num, event, act, fore, prev):
     ec = EconomicEvent.objects.create(
         time=t_, flag_cur=flag_cur, txt_num=txt_num,
         event=event, act=act, fore=fore, prev=prev,
-        ident=ident,
+        ident=ident, country=country,
     )
     return ec
 

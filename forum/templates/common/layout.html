@@ -92,8 +92,8 @@
                 <li class="{% if tab=='stats' %}active{% endif %}">
                     <a href="">指标</a>
                 </li>
-                <li class="{% if tab=='calendar' %}active{% endif %}">
-                    <a href="{{ url('calendar') }}">最新日历</a>
+                <li class="{% if tab=='events' %}active{% endif %}">
+                    <a href="{{ url('events') }}">最新日历</a>
                 </li>
                 {% if not user.is_authenticated() %}
                 <li>
