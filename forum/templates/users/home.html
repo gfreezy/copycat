@@ -47,13 +47,11 @@
 {% block main %}
     <div class="user-page">
         <div class="profile shaddow">
-            <div class="ui-header">
+            <div class="ui-header clearfix pb10">
                 <img src="{{ owner.avatar.medium.url }}" alt="{{ owner.username }}"
                      class="avatar">
 
                 <div class="username">{{ owner.username }}</div>
-                <div class="user-number f12 c9">F2E 第&nbsp;<span class="f13">{{ owner.id }}</span>&nbsp;号成员,
-                    入住于&nbsp;{{ owner.date_joined | date}}</div>
                 {% if user.is_authenticated() and user != owner %}
                     <div class="follow">
                         {% if not user.is_following(owner) %}
@@ -71,42 +69,8 @@
                 {% endif %}
             </div>
             <div class="ui-content">
-                <dl>
-                    <dt>ID</dt>
-                    <dd>guokai</dd>
-                </dl>
-                <dl>
-                    <dt>名号</dt>
-                    <dd>郭凯</dd>
-                </dl>
-                <dl>
-                    <dt>城市</dt>
-                    <dd>北京</dd>
-                </dl>
-                <dl>
-                    <dt>公司</dt>
-                    <dd>淘宝</dd>
-                </dl>
-                <dl>
-                    <dt>Email</dt>
-                    <dd>badkai***@gmail.com</dd>
-                </dl>
-                <dl>
-                    <dt>Twitter</dt>
-                    <dd><a href="http://twitter.com/guokai">http://twitter.com/guokai</a></dd>
-                </dl>
-                <dl>
-                    <dt>Github</dt>
-                    <dd><a href="http://github.com/paulguo">http://github.com/paulguo</a></dd>
-                </dl>
-                <dl>
-                    <dt>Blog</dt>
-                    <dd><a href="http://benben.cc">http://benben.cc</a></dd>
-                </dl>
-                <dl>
-                    <dt>签名</dt>
-                    <dd>光线若要万分明亮，必须射进黑暗的世界。</dd>
-                </dl>
+                <div class="user-number f12 c9">F2E 第&nbsp;<span class="f13">{{ owner.id }}</span>&nbsp;号成员,
+                    入住于&nbsp;{{ owner.date_joined | date}}</div>
             </div>
         </div>
 

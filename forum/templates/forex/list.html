@@ -3,7 +3,7 @@
 {% block header_left %}
     <div class="title">
         <div class="bread-nav">
-            <a href="{{ url('index') }}">首页</a> › 最新日历
+            <a href="{{ url('index') }}">首页</a> › 外汇
         </div>
     </div>
 {% endblock %}
@@ -14,12 +14,7 @@
     <thead>
         <tr>
             <th class="time pb10 pt10">时间</th>
-            <th class="flagCur tl pl30">货币</th>
-            <th class="txtNum tr pl20 pr10">重要性</th>
-            <th class="event tl pl30">活动</th>
-            <th class="act pl10">今值</th>
-            <th class="fore pl10">预测值</th>
-            <th class="prev pl10 pr10">前值</th>
+            <th class="title pr30">外汇事件</th>
         </tr>
     </thead>
     <tbody>
@@ -30,12 +25,9 @@
             {% else %}
             <td class="time">{{ e.time|datetime('%Y-%m-%d %H:%M:%S') }}</td>
             {% endif %}
-            <td class="flagCur pl20 tl"><span class="ceFlags {{ e.country }}">&nbsp;</span>{{ e.flag_cur }}</td>
-            <td class="txtNum"><i class="txtNum{{ e.txt_num }}">&nbsp;</i></td>
-            <td class="event tl pl30">{{ e.event }}</td>
-            <td class="act">{{ e.act }}</td>
-            <td class="fore">{{ e.fore }}</td>
-            <td class="prev pr10">{{ e.prev }}</td>
+            <td class="title pr30">
+                <a href="{{ e.url }}">{{ e.title }}</a>
+            </td>
         </tr>
     {% endfor %}
     </tbody>

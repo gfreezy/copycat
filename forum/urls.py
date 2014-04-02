@@ -5,6 +5,7 @@ import forum.views.blogs
 import forum.views.root
 import forum.views.pages
 import forum.views.events
+import forum.views.forex
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
 from forum.views.auth import RegisterView, AuthenticationForm
@@ -78,7 +79,8 @@ urlpatterns = patterns(
 
     # other
     url(r'^events$', forum.views.events.EventsView.as_view(), name='events'),
-    url(r'^calendar$', forum.views.pages.calendar, name='calendar'),
+    url(r'^forex$', forum.views.forex.ForexView.as_view(), name='forex'),
 
     url(r'^proxy/(?P<url>.*)', forum.views.root.proxy, name='proxy'),
+
 )

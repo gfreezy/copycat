@@ -8,7 +8,7 @@ from jingo import register, env
 from jinja2.utils import Markup
 from markdown import markdown as markdown_
 from django.template.loader import render_to_string
-from copycat import settings
+from django.conf import settings
 
 
 if settings.TIME_ZONE:

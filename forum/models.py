@@ -558,11 +558,20 @@ class EconomicEvent(models.Model):
     country = models.CharField(max_length=100)
     flag_cur = models.CharField(max_length=20)
     txt_num = models.CharField(max_length=20)
-    event = models.CharField(max_length=200)
+    event = models.CharField(max_length=1000)
     act = models.CharField(max_length=20, blank=True)
     fore = models.CharField(max_length=20, blank=True)
     prev = models.CharField(max_length=20, blank=True)
     ident = models.IntegerField(unique=True)
+
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=True)
+
+
+class ImportEvent(models.Model):
+    time = models.DateTimeField()
+    currency = models.CharField(max_length=100)
+    event = models.CharField(max_length=1000)
 
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)

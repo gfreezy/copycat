@@ -13,7 +13,8 @@ def home(request, name):
     if user.is_authenticated():
         user.clear_notifications_with_member(u)
     return render(request, 'users/home.html', {
-        'owner': u
+        'owner': u,
+        'tab': 'home',
     })
 
 

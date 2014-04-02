@@ -89,8 +89,8 @@
                 <li class="{% if tab=='blog' %}active{% endif %}">
                     <a href="{{ url('blog_list') }}">博客</a>
                 </li>
-                <li class="{% if tab=='stats' %}active{% endif %}">
-                    <a href="">指标</a>
+                <li class="{% if tab=='forex' %}active{% endif %}">
+                    <a href="{{ url('forex') }}">外汇</a>
                 </li>
                 <li class="{% if tab=='events' %}active{% endif %}">
                     <a href="{{ url('events') }}">最新日历</a>
@@ -103,6 +103,9 @@
                     <a href="{{ url('login') }}" rel="nofollow">登录</a>
                 </li>
                 {% else %}
+                <li class="{% if tab=='home' %}active{% endif %}">
+                    <a href="{{ url('user', user.username) }}">我的主页</a>
+                </li>
                 <li>
                     <a href="{{ url('logout') }}" rel="nofollow">退出</a>
                 </li>
