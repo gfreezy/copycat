@@ -142,6 +142,17 @@ a {
 
 .scrollable-calendar {
   padding: 0;
+  .marquee {
+    height: 35px;
+    overflow: hidden;
+  }
+}
+
+.carousel-caption {
+  height: 100px;
+}
+.carousel-indicators li {
+  cursor: pointer;
 }
 
 .topics {
@@ -1180,6 +1191,9 @@ input[type="color"],
 
 
 .events {
+  p.title {
+    color: #4A7FB3;
+  }
   thead tr {
     background-color: #CFCCCD;
   }
@@ -1228,4 +1242,21 @@ input[type="color"],
 
 .sidebox.placeholder {
   height: 11px;
+}
+
+
+.day-nav {
+  font-size: 16px;
+  padding-bottom: 10px;
+  .prev-day, .next-day {
+    display: inline-block;
+    padding: 3px 16px;
+  }
+  .disable {
+    cursor: default;
+    color: #FBF8F9;
+    &:hover {
+      color: #FBF8F9;
+    }
+  }
 }

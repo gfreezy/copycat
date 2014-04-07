@@ -2,6 +2,18 @@
 {% import 'common/topics.html' as topics_util %}
 {% import 'common/blogs.html' as blogs_util %}
 
+{% block stylesheet %}
+    <script src="/static/js/base/jquery.marquee.min.js"></script>
+    <script>
+    $(window).load(function() {
+        $('.marquee').marquee({
+            duration: 25000,
+            pauseOnHover: true
+        });
+    });
+    </script>
+{% endblock %}
+
 {% block header %}
 <div class="row-fluid">
     <div class="span7">
@@ -33,7 +45,7 @@
 <div class="scrollable-calendar">
     <div class="ui-header sep">滚动日历</div>
     <div class="ui-content">
-        <ul>
+        <ul class="marquee">
             {% for e in recent_events %}
             <li><span class="ceFlags {{ e.country }}">&nbsp;</span>{{ e.flag_cur }}&nbsp;&nbsp;{{ e.event }}</li>
             {% endfor %}
