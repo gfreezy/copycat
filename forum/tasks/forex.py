@@ -11,6 +11,7 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "copycat.settings"
 import requests
 import datetime
 import pytz
+from hashlib import md5
 import urlparse
 from bs4 import BeautifulSoup
 from django_cron import CronJobBase, Schedule
@@ -25,6 +26,7 @@ URLS = [
 
 def fetch_row_data(url):
     req = requests.get(url)
+    req.encoding = 'utf8'
     bs = BeautifulSoup(req.text)
     all_rows = bs.select('.primaryContent .headlineMed')
     for row in all_rows:
@@ -53,7 +55,7 @@ def parse_time(t):
 
 
 def create(time, title, url):
-    ident = hash('%s%s%s' % (time, title, url)) & 0xffffffff
+    ident = md5((title+url).encode('utf8')).hexdigest()
     if Forex.objects.filter(ident=ident).exists():
         return
     url = urlparse.urljoin(HOST, url)

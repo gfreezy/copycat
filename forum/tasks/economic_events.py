@@ -9,6 +9,7 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "copycat.settings"
 
 import requests
 import datetime
+from hashlib import md5
 from bs4 import BeautifulSoup
 from django_cron import CronJobBase, Schedule
 from forum.models import EconomicEvent
@@ -20,6 +21,7 @@ URL = 'http://cn.investing.com/economic-calendar/'
 
 def fetch_row_data(url=URL):
     req = requests.get(url)
+    req.encoding = 'utf8'
     bs = BeautifulSoup(req.text)
     all_rows = bs.find(id='ecEventsTable').find_all('tr')
     for row in all_rows:
@@ -44,7 +46,8 @@ def parse_row(row):
 
 
 def create_event(time, country, flag_cur, txt_num, event, act, fore, prev):
-    ident = hash('%s%s' % (time, event)) & 0xffffffff
+    s = '%s%s%s' % (time, flag_cur, event)
+    ident = md5(s.encode('utf8')).hexdigest()
     if EconomicEvent.objects.filter(ident=ident).count():
         return
 
