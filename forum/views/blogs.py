@@ -13,7 +13,7 @@ class BlogView(ListView):
     template_name = 'blogs/show.html'
     http_method_names = ['get']
     model = Blog
-    paginate_by = 6
+    paginate_by = 20
 
     def get(self, request, *args, **kwargs):
         id = self.kwargs.get('id')

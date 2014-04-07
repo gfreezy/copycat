@@ -3,40 +3,71 @@
 {% block header_left %}
     <div class="title">
         <div class="bread-nav">
-            <a href="{{ url('index') }}">首页</a> › 外汇
+            <a href="{{ url('index') }}">首页</a> › 财经事件
         </div>
     </div>
 {% endblock %}
 
 {% block main %}
 <div class="white-bg p10 shadow events">
-<table class="w lh200 tr">
-    <thead>
-        <tr>
-            <th class="time pb10 pt10">时间</th>
-            <th class="title pr30">外汇事件</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for e in object_list %}
-        <tr>
-            {% if e.time >= today  %}
-            <td class="time">{{ e.time|datetime('%H:%M:%S') }}</td>
-            {% else %}
-            <td class="time">{{ e.time|datetime('%Y-%m-%d %H:%M:%S') }}</td>
-            {% endif %}
-            <td class="title pr30">
-                <a href="{{ e.url }}">{{ e.title }}</a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-</div>
 
-<div class="clearfix">
-    <div class="fr">
-      {{ page_obj|paginate }}
+    <div class="day-nav clearfix ui-header">
+        {% set prev = prev_day(date) %}
+        {% set next = next_day(date) %}
+        {% if prev < today %}
+        <a href="{{ url('forex')|param(date=prev.strftime('%Y-%m-%d')) }}" class="prev-day btn btn-small"><i class="fa fa-chevron-left"></i></a>
+        {% else %}
+        <a href="javascript:void(0)" rel="nofollow" class="prev-day disable btn btn-small"><i class="fa fa-chevron-left"></i></a>
+        {% endif %}
+        {% if next <= today %}
+        <a href="{{ url('forex')|param(date=next.strftime('%Y-%m-%d')) }}" class="next-day btn btn-small"><i class="fa fa-chevron-right"></i></a>
+        {% else %}
+        <a href="javascript:void(0)" rel="nofollow" class="next-day disable btn btn-small"><i class="fa fa-chevron-right"></i></a>
+        {% endif %}
+        &nbsp;&nbsp;{{ date|datetime('%Y年%m月%d日') }}
+    </div>
+
+    <div class="ui-content">
+        <p class="f16 title">财经大事</p>
+
+        <table class="w lh200 tr">
+            <thead>
+                <tr>
+                    <th class="time pb10 pt10">时间</th>
+                    <th class="flagCur tr pr30">货币</th>
+                    <th class="event tl pl30">事件</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for e in events %}
+                <tr>
+                    <td class="time">{{ e.time|datetime('%m-%d %H:%M') }}</td>
+                    <td class="flagCur tr pr30">{{ e.currency }}</td>
+                    <td class="event tl pl30">{{ e.event }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <p class="f16 pt20 title">外汇事件</p>
+        <table class="w lh200 tr">
+            <thead>
+                <tr>
+                    <th class="time pb10 pt10">时间</th>
+                    <th class="title pr30">外汇事件</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for e in forex %}
+                <tr>
+                    <td class="time">{{ e.time|datetime('%H:%M') }}</td>
+                    <td class="title pr30">
+                        <a href="{{ e.url }}" target="_blank">{{ e.title }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

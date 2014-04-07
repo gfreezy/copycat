@@ -16,12 +16,14 @@
     <!-- include summernote css/js-->
     <link rel="stylesheet" href="/static/css/summernote.css" />
     <script type="text/javascript" src="/static/js/base/summernote.js"></script>
+    <script type="text/javascript" src="/static/js/base/summernote-zh-CN.js"></script>
     {% compressed_css 'main' %}
     <link rel="apple-touch-icon" href="/static/images/f2e.im.icon.png">
     <script>
         $(document).ready(function() {
             $('textarea').summernote({
                 height: 200,
+                lang: 'zh-CN',
                 toolbar: [
                     //['style', ['style']], // no style button
                     ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -90,7 +92,7 @@
                     <a href="{{ url('blog_list') }}">博客</a>
                 </li>
                 <li class="{% if tab=='forex' %}active{% endif %}">
-                    <a href="{{ url('forex') }}">外汇</a>
+                    <a href="{{ url('forex') }}">财经事件</a>
                 </li>
                 <li class="{% if tab=='events' %}active{% endif %}">
                     <a href="{{ url('events') }}">最新日历</a>

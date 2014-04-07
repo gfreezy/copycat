@@ -162,7 +162,7 @@
                         <span class="floor">#{{ floor + loop.index0 }}</span>
                     </div>
                 </div>
-                <span class="content">{{ comment.content|markdown|content_process|safe }}</span>
+                <span class="content">{{ comment.content|content_process|sanitize }}</span>
             </div>
         </div>
         {% endfor %}

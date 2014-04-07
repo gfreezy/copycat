@@ -562,7 +562,7 @@ class EconomicEvent(models.Model):
     act = models.CharField(max_length=20, blank=True)
     fore = models.CharField(max_length=20, blank=True)
     prev = models.CharField(max_length=20, blank=True)
-    ident = models.IntegerField(unique=True)
+    ident = models.CharField(unique=True, max_length=32)
 
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)
@@ -572,6 +572,7 @@ class ImportEvent(models.Model):
     time = models.DateTimeField()
     currency = models.CharField(max_length=100)
     event = models.CharField(max_length=1000)
+    ident = models.CharField(unique=True, max_length=32)
 
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)
@@ -581,7 +582,7 @@ class Forex(models.Model):
     time = models.DateTimeField()
     title = models.CharField(max_length=20)
     url = models.URLField()
-    ident = models.IntegerField(unique=True)
+    ident = models.CharField(unique=True, max_length=32)
 
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)

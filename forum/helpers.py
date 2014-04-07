@@ -3,12 +3,15 @@ import re
 import pytz
 import django.utils.timezone
 import bleach
-from datetime import datetime
+import jinja2
+from datetime import datetime, timedelta
 from jingo import register, env
 from jinja2.utils import Markup
 from markdown import markdown as markdown_
 from django.template.loader import render_to_string
 from django.conf import settings
+from urllib import urlencode
+from urlparse import parse_qs, urlsplit, urlunsplit
 
 
 if settings.TIME_ZONE:
@@ -57,14 +60,18 @@ def template_localtime(value, use_tz=None):
 @register.filter
 def date(d, format='%Y-%m-%d', tz=None):
     local = template_localtime(d, tz)
-    return local.strftime(format)
+    if isinstance(format, unicode):
+        format = format.encode('utf8')
+    return local.strftime(format).decode('utf8')
 
 
 @register.filter
 @rename('datetime')
 def datetime_(d, format='%Y-%m-%d %H:%M:%S', tz=None):
     local = template_localtime(d, tz)
-    return local.strftime(format)
+    if isinstance(format, unicode):
+        format = format.encode('utf8')
+    return local.strftime(format).decode('utf8')
 
 
 @register.filter
@@ -110,10 +117,10 @@ def human_date(t):
 
 def gen_page_list(current_page=1, total_page=1, list_rows=10):
     '''list_rows: 最多显示多少页码'''
-    if (total_page <= list_rows):
+    if total_page <= list_rows:
         return range(1, total_page + 1)
 
-    if (current_page + list_rows > total_page):
+    if current_page + list_rows > total_page:
         return range(total_page - list_rows + 1, list_rows + 1)
 
     return range(current_page, list_rows + 1)
@@ -214,3 +221,27 @@ ALLOWED_STYLES = ['font', 'font-weight', 'font-size', 'font-style', 'text-align'
 @register.filter
 def sanitize(text):
     return Markup(bleach.clean(text, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRIBUTES, styles=ALLOWED_STYLES))
+
+
+@register.filter
+def param(url, **kwargs):
+    scheme, netloc, path, query_string, fragment = urlsplit(url)
+    query_params = parse_qs(query_string)
+
+    for param_name, param_value in kwargs.items():
+        query_params[param_name] = [param_value]
+    new_query_string = urlencode(query_params, doseq=True)
+
+    return urlunsplit((scheme, netloc, path, new_query_string, fragment))
+
+
+@register.function(override=False)
+def prev_day(date):
+    delta = timedelta(days=1)
+    return date - delta
+
+
+@register.function(override=False)
+def next_day(date):
+    delta = timedelta(days=1)
+    return date + delta
