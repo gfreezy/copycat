@@ -166,7 +166,7 @@ def markdown(content):
 def dump_errors(errors):
     t = env.from_string('''
         {% if errors %}
-            {% for field_errors in errors.values() %}
+            {% for field_name, field_errors in errors.items() %}
                 {% for err in field_errors %}
                 <div class="alert alert-error">
                 {{ err }}

@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 from sky_thumbnails.fields import EnhancedImageField
 from jsonfield import JSONField
+from django.core import exceptions
 
 
 METHION_REGEXP = re.compile(r"@(?P<username>\w+)(\s|$)", re.I)
@@ -50,6 +51,12 @@ class UserManager(BaseUserManager):
         return self._create_user(username, email, password, True, True,
                                  **extra_fields)
 
+    def create_oauth_user(self, provider, uid, access_token, avatar=None):
+        # todo: get user name and user avatar
+        u = self.create_user(provider+uid)
+        u.connect(provider, uid, access_token)
+        return u
+
 
 class User(AbstractUser):
     avatar = EnhancedImageField(
@@ -61,6 +68,7 @@ class User(AbstractUser):
             'medium': dict(size=(73, 73), sharpen=True),
         }
     )
+    profile = models.TextField(blank=True, help_text='user profile')
     n_favourites = models.IntegerField(default=0, editable=False, help_text='topic favourites')
     n_followings = models.IntegerField(default=0, editable=False, help_text='user followings')
     n_collects = models.IntegerField(default=0, editable=False, help_text='node collects')
@@ -77,6 +85,14 @@ class User(AbstractUser):
     @classmethod
     def hot(cls, n=6):
         return cls.objects.order_by('-last_active_time')[:n]
+
+    @classmethod
+    def from_oauth(cls, provider, uid, access_token, avatar=None):
+        try:
+            u = SocialAccount.objects.get(provider=provider, uid=uid)
+            return u.user
+        except exceptions.ObjectDoesNotExist:
+            return cls.objects.create_oauth_user(provider, uid, access_token, avatar)
 
     def get_absolute_url(self):
         return reverse('user', kwargs={'name': self.username})
@@ -170,6 +186,30 @@ class User(AbstractUser):
     def mark_all_as_read(self):
         return Notification.mark_all_as_read_for(self)
 
+    def connect(self, provider, uid, access_token):
+        s = SocialAccount.objects.get_or_create(user=self, provider=provider, uid=uid)[0]
+        s.access_token = access_token
+        s.save()
+
+    def disconnect(self, provider):
+        SocialAccount.objects.filter(user=self, provider=provider).delete()
+
+    def connected_to(self, provider):
+        return SocialAccount.objects.filter(user=self, provider=provider).exists()
+
+
+class SocialAccount(models.Model):
+    class Meta:
+        index_together = (('provider', 'uid'), ('user', 'provider', 'uid'))
+
+    uid = models.CharField(max_length=200)
+    provider = models.CharField(max_length=100)
+    access_token = models.CharField(max_length=200)
+    user = models.ForeignKey(User)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True, auto_now_add=True)
+
 
 class Plane(models.Model):
     name = models.CharField(max_length=100)
@@ -218,13 +258,6 @@ class Node(models.Model):
 
     def collected_by(self, u):
         return Collect.objects.filter(author=u, node=self).exists()
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User)
-
-    def __unicode__(self):
-        return '<Profile:%s %s>' % (self.id, self.user.username)
 
 
 class Topic(models.Model):

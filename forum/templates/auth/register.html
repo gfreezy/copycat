@@ -29,7 +29,7 @@
                 <label class="control-label" for="email">E-mail</label>
 
                 <div class="controls">
-                    <input type="text" id="email" name="email" class="input-xlarge" value="{{ form.email.value() }}">
+                    <input type="email" id="email" name="email" class="input-xlarge" value="{{ form.email.value() }}">
 
                     <p class="help-block">请输入你的E-mail，便于找回密码</p>
                 </div>
@@ -68,6 +68,16 @@
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
     </form>
 </div>
+
+
+<div class="social-login mt30">
+{% for s in social_sites.list_sites_class() %}
+    {% set site = social_sites.get_site_object_by_class(s) %}
+    {% set auth_url = site.authorize_url  %}
+    <a href="{{ auth_url }}" rel="nofollow" class="login-button {{ site.site_name }}">{{ site.site_name_zh }}登陆</a>
+{% endfor %}
+</div>
+
 {% endblock %}
 
 {% block sidebar %}

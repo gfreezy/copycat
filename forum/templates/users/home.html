@@ -51,7 +51,13 @@
                 <img src="{{ owner.avatar.medium.url }}" alt="{{ owner.username }}"
                      class="avatar">
 
-                <div class="username">{{ owner.username }}</div>
+                <div class="username">{{ owner.username }}
+                    {% if user == owner %}
+                    <sapn class="f12 ca5 ml10">
+                    {{ owner.email }}
+                    </span>
+                    {% endif %}
+                </div>
                 {% if user.is_authenticated() and user != owner %}
                     <div class="follow">
                         {% if not user.is_following(owner) %}
@@ -71,6 +77,9 @@
             <div class="ui-content">
                 <div class="user-number f12 c9">F2E 第&nbsp;<span class="f13">{{ owner.id }}</span>&nbsp;号成员,
                     入住于&nbsp;{{ owner.date_joined | date}}</div>
+                <div class="pt10 pb10 f13">
+                    {{ owner.profile|content_process|sanitize }}
+                </div>
             </div>
         </div>
 
@@ -122,4 +131,25 @@
             {% endif %}
         </div>
     </div>
+{% endblock %}
+
+
+{% block sidebar %}
+<div class="p10 white-bg shadow">
+    <div class="ui-header">
+        <span class="title">用户操作</span>
+    </div>
+    <div class="ui-content">
+        <ul>
+            <li class="mb5">
+                <a href="{{ url('user_update', user.username) }}">修改资料</a>
+            </li>
+            <li class="mb5">
+               <a href="{{ url('password_reset') }}">修改密码</a>
+            </li>
+
+        </ul>
+
+    </div>
+</div>
 {% endblock %}

@@ -20,9 +20,13 @@ urlpatterns = patterns(
         {
             'template_name': 'auth/login.html',
             'authentication_form': AuthenticationForm,
+            'extra_context': {
+                'social_sites': forum.views.social_sites,
+            },
         },
         name='login'
     ),
+    url(r'^login/(?P<provider>.*?)$', forum.views.users.oauth, name='oauth'),
     url(r'^logout$', 'django.contrib.auth.views.logout_then_login', name='logout'),
     url(r'^password_reset$',
         'django.contrib.auth.views.password_reset',
@@ -57,6 +61,7 @@ urlpatterns = patterns(
     url(r'^member/(?P<name>\w+)$', forum.views.users.home, name='user'),
     url(r'^member/(?P<name>\w+)/topics$', forum.views.users.TopicsView.as_view(), name='user_topics'),
     url(r'^member/(?P<name>\w+)/replies$', forum.views.users.RepliesView.as_view(), name='user_replies'),
+    url(r'^member/(?P<name>\w+)/update$', forum.views.users.UpdateProfileView.as_view(), name='user_update'),
     url(r'^follow/(?P<name>\w+)', forum.views.users.FollowView.as_view(), name='follow'),
     url(r'^unfollow/(?P<name>\w+)', forum.views.users.UnfollowView.as_view(), name='unfollow'),
 

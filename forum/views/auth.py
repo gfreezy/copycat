@@ -1,5 +1,6 @@
 #coding: utf8
 import django.contrib.auth.views
+import forum.views
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
@@ -77,3 +78,8 @@ class RegisterView(AnonymousRequiredMixin, FormView):
         login(self.request, user)
         messages.success(self.request, u'注册成功，欢迎加入,%s' % user.username)
         return super(RegisterView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(RegisterView, self).get_context_data(**kwargs)
+        ctx['social_sites'] = forum.views.social_sites
+        return ctx

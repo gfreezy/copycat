@@ -7,17 +7,8 @@
     <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
     <meta name="format-detection" content="telephone=no"/>
     <title>{% block title %}F2E - 前端技术社区{% endblock %}</title>
-    <script type="text/javascript" src="/static/js/base/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="/static/js/base/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/static/js/base/jquery.cookie.js"></script>
-    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.min.css"/>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
-
-    <!-- include summernote css/js-->
-    <link rel="stylesheet" href="/static/css/summernote.css" />
-    <script type="text/javascript" src="/static/js/base/summernote.js"></script>
-    <script type="text/javascript" src="/static/js/base/summernote-zh-CN.js"></script>
     {% compressed_css 'main' %}
+    {% compressed_js 'main' %}
     <link rel="apple-touch-icon" href="/static/images/f2e.im.icon.png">
     <script>
         $(document).ready(function() {

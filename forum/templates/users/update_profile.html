@@ -1,0 +1,59 @@
+{% extends 'common/layout.html' %}
+
+{% block header_left %}
+    <div class="title">
+        <div class="bread-nav">
+            <a href="{{ url('index') }}">首页</a> › <a href="{{ url('user', user.username) }}">{{ user.username }}</a> › 修改资料
+        </div>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <form action="" class="form-horizontal" method="post" enctype="multipart/form-data">
+        {{ csrf() }}
+        <div class="control-group">
+            <label class="control-label" for="avatar">头像</label>
+
+            <div class="controls">
+                <input type="file" id="avatar" name="avatar">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- Username -->
+            <label class="control-label" for="username">用户名</label>
+
+            <div class="controls">
+                <input type="text" id="username" name="username" class="input-xlarge" value="{{ form.username.value() }}">
+
+                <p class="help-block">用户名由字母开头，只能含有字母、数字或者下划线</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- E-mail -->
+            <label class="control-label" for="email">E-mail</label>
+
+            <div class="controls">
+                <input type="email" id="email" name="email" class="input-xlarge" value="{{ form.email.value() }}">
+
+                <p class="help-block">请输入你的E-mail，便于找回密码</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="profile">个人介绍</label>
+
+            <div class="controls">
+                <textarea id="profile" name="profile" rows="3">{{ form.profile.value() }}</textarea>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- Button -->
+            <div class="controls">
+                <input type="submit" value="保存修改" class="btn"/>
+            </div>
+        </div>
+</form>
+{% endblock %}

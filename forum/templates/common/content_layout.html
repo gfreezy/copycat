@@ -5,12 +5,12 @@
 <div class="usercard white-bg shadow">
     <div class="ui-header p10">
         <div class="clearfix">
-            <a href="{{ url('user', user.get_username()) }}">
-                <img src="{{ user.avatar.small.url }}" alt="{{ user.get_username() }}"
+            <a href="{{ url('user', user.username) }}">
+                <img src="{{ user.avatar.small.url }}" alt="{{ user.username }}"
                      class="avatar"/>
             </a>
 
-            <div class="username"><a href="{{ url('user', user.username) }}">{{ user.get_username() }}</a></div>
+            <div class="username"><a href="{{ url('user', user.username) }}">{{ user.username }}</a></div>
         </div>
         <div class="member-stats clearfix">
             <div class="status status-collects">
@@ -34,7 +34,7 @@
     {% if 0 %}
     <div class="alert mt10 mb10">
     <span>
-        <a href="/notifications">{{ user.get_username() }}，你有{{
+        <a href="/notifications">{{ user.username }}，你有{{
             user.notification_set.count() }}条未读提醒，去看看吧</a>
     </span>
     </div>
