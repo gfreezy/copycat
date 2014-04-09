@@ -136,7 +136,7 @@ a {
   padding-bottom: 12px;
 }
 
-.whats-new, .recent-blogs {
+.whats-new, .hot-blogs {
   padding: 24px 0 0;
 }
 
@@ -1294,5 +1294,90 @@ input[type="color"],
   background-position: -150px 0;
   &:hover {
     background-position: -150px -40px;
+  }
+}
+
+.gold {
+  padding: 5px 10px;
+  margin-top: -5px;
+  background-color: #F3F0F1;
+  @include border-radius(10px);
+  img {
+    vertical-align: top;
+  }
+}
+
+.recent-blogs {
+  width: 494px;
+  float: right;
+  .blog-item {
+    &:hover {
+      background-color: #edf4fa;
+    }
+    @extend %scut-clearfix;
+    padding: 8px 40px 8px 14px;
+    line-height: 12px;
+    position: relative;
+    background-color: #ffffff;
+    margin-bottom: 2px;
+    height: 58px;
+
+      .avatar {
+        @include border-radius(3px, 3px);
+        float: left;
+        margin: 0 10px 0 0;
+        width: 42px;
+        height: 42px;
+      }
+
+      .title {
+        font-size: 16px;
+        font-weight: normal;
+        line-height: 21px;
+        color: #777;
+        margin: 0 0 3px 0;
+        letter-spacing: 0;
+        text-shadow: 0 1px 0 #fff;
+
+        a {
+          color: #555;
+        }
+      }
+
+      .meta {
+        font-size: 12px;
+        color: #a5a5a5;
+
+        .node {
+          @include border-radius(3px, 3px);
+          display: inline-block;
+          padding: 3px 4px;
+          background: #eee;
+
+          a {
+            color: #a5a5a5;
+          }
+        }
+
+        .username {
+          font-weight: bold;
+          color: #888;
+
+          a {
+            color: #888;
+          }
+        }
+
+        .last-reply-username {
+          strong {
+            margin: 0 0 0 3px;
+            color: #888;
+          }
+        }
+
+        span {
+          margin: 0 5px 0 2px;
+        }
+      }
   }
 }
