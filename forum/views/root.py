@@ -9,7 +9,7 @@ from braces.views import JSONResponseMixin, LoginRequiredMixin
 def index(request):
     hot_topics = Topic.hot()
     new_topics = Topic.objects.order_by('-id')[:10]
-    recent_blogs = Blog.recent(8)
+    recent_blogs = Blog.recent(5)
     stick_blogs = Blog.sticks()
     hot_blogs = Blog.hot(2)
     hot_nodes = Node.hot()
