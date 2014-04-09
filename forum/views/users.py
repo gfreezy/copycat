@@ -1,31 +1,11 @@
 #coding: utf8
-from socialoauth import SocialSites
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
 from django.views.generic import View
 from braces.views import LoginRequiredMixin, JSONResponseMixin
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from forum.models import Topic, Reply, User, Notification
-from forum.views.helpers import login_user
-
-
-def oauth(request, provider):
-    code = request.GET.get('code')
-    if not code:
-        # 认证返回的params中没有code，肯定出错了
-        # 重定向到某处，再做处理
-        raise
-
-    social_sites = SocialSites(settings.SOCIALOAUTH_SITES)
-    s = social_sites.get_site_object_by_name(provider)
-
-    # 用code去换取认证的access_token
-    s.get_access_token(code)
-    u = User.from_oauth(s.name, s.uid, s.access_token, s.avatar)
-    login_user(request, u)
-    return redirect('index')
 
 
 def home(request, name):

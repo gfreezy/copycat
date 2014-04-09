@@ -1,13 +1,17 @@
 #coding: utf8
 import django.contrib.auth.views
 import forum.views
+from socialoauth import SocialSites
+from django.conf import settings
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django import forms
+from django.shortcuts import redirect
 from braces.views import AnonymousRequiredMixin
 from forum.models import User
+from forum.views.helpers import login_user
 
 
 class AuthenticationForm(django.contrib.auth.views.AuthenticationForm):
@@ -83,3 +87,20 @@ class RegisterView(AnonymousRequiredMixin, FormView):
         ctx = super(RegisterView, self).get_context_data(**kwargs)
         ctx['social_sites'] = forum.views.social_sites
         return ctx
+
+
+def oauth(request, provider):
+    code = request.GET.get('code')
+    if not code:
+        # 认证返回的params中没有code，肯定出错了
+        # 重定向到某处，再做处理
+        raise
+
+    social_sites = SocialSites(settings.SOCIALOAUTH_SITES)
+    s = social_sites.get_site_object_by_name(provider)
+
+    # 用code去换取认证的access_token
+    s.get_access_token(code)
+    u = User.from_oauth(s.name, s.uid, s.access_token, s.avatar)
+    login_user(request, u)
+    return redirect('index')

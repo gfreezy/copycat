@@ -25,20 +25,11 @@
         </div>
     </div>
 
-    {% if user.is_authenticated() %}
-    <div class="ui-content p10">
+    <div class="ui-content p10 clearfix">
+        <span class="fr c6 gold"> {{ user.gold }}<img src="/static/images/gold.png" width="16" height="16" class="ml5"> </span>
         <a href="{{ url('notifications') }}">{{ user.unread_notifications().count() }} 条未读提醒</a>
     </div>
-    {% endif %}
 </div>
-    {% if 0 %}
-    <div class="alert mt10 mb10">
-    <span>
-        <a href="/notifications">{{ user.username }}，你有{{
-            user.notification_set.count() }}条未读提醒，去看看吧</a>
-    </span>
-    </div>
-    {% endif %}
 {% else %}
 <div class="login-box white-bg shadow">
     <div class="ui-content tc">
@@ -83,14 +74,14 @@
 </div>
 
 
-{#<div class="sidebox shadow">#}
-{#    <iframe frameborder="0" width="355" height="380" scrolling="no" src="{{ url('proxy', 'http://markets.wallstreetcn.com/embed/sidebar?width=335') }}"></iframe>#}
-{#    <script>#}
-{#    $('iframe').one('load', function() {#}
-{#        $(this).contents().find('.iframe').css('background-color', 'transparent');#}
-{#    })#}
-{#    </script>#}
-{#</div>#}
+<div class="sidebox shadow">
+    <iframe frameborder="0" width="355" height="380" scrolling="no" src="{{ url('proxy', 'http://markets.wallstreetcn.com/embed/sidebar?width=335') }}"></iframe>
+    <script>
+    $('iframe').one('load', function() {
+        $(this).contents().find('.iframe').css('background-color', 'transparent');
+    })
+    </script>
+</div>
 
 
 <div class="central-banks sidebox shadow white-bg">

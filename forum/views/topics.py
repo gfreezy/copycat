@@ -70,6 +70,7 @@ def show(request, id):
 
 class FavouriteView(View, LoginRequiredMixin, JSONResponseMixin):
     http_method_names = ['post']
+
     def post(self, request, id):
         t = get_object_or_404(Topic, pk=id)
         if t.created_by(request.user):
@@ -92,6 +93,7 @@ class FavouriteView(View, LoginRequiredMixin, JSONResponseMixin):
 
 class UnfavouriteView(View, LoginRequiredMixin, JSONResponseMixin):
     http_method_names = ['post']
+
     def post(self, request, id):
         t = get_object_or_404(Topic, pk=id)
         if not t.favourited_by(request.user):
@@ -130,6 +132,11 @@ class NewView(LoginRequiredMixin, CreateView):
         node = get_object_or_404(Node, slug=slug)
         form.instance.author = self.request.user
         form.instance.node = node
+
+        user = self.request.user
+        user.gold -= 5
+        user.save()
+
         messages.success(self.request, '主题创建成功')
         return super(NewView, self).form_valid(form)
 
@@ -148,6 +155,11 @@ class EditView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, '主题修改成功')
         self.request.user.update_active_time()
+
+        user = self.request.user
+        user.gold -= 2
+        user.save()
+
         return super(EditView, self).form_valid(form)
 
     def get_object(self, queryset=Node):

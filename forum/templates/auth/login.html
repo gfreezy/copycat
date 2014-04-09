@@ -18,12 +18,12 @@
 
             <div class="control-group">
                 <!-- E-mail -->
-                <label class="control-label" for="{{form.username.id_for_label}}">邮箱</label>
+                <label class="control-label" for="{{form.username.id_for_label}}">用户名</label>
 
                 <div class="controls">
                     {{ form.username|css('input-xlarge') }}
 
-                    <p class="help-block">请输入您的邮箱</p>
+                    <p class="help-block">请输入您的用户名</p>
                 </div>
             </div>
 
@@ -48,7 +48,7 @@
             </div>
         </fieldset>
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
-        <input type="hidden" name="next" value="{{ url('index') }}"/>
+        <input type="hidden" name="next" value="{{ request.META.HTTP_REFERER or url('index') }}"/>
 
     </form>
 

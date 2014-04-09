@@ -11,6 +11,23 @@
     {% compressed_js 'main' %}
     <link rel="apple-touch-icon" href="/static/images/f2e.im.icon.png">
     <script>
+
+        function sendFile(file,editor,welEditable) {
+            var data = new FormData();
+            data.append("pic", file);
+            $.ajax({
+                data: data,
+                dataType: 'json',
+                type: "POST",
+                url: "{{ url('upload_pic') }}",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(resp) {
+                        editor.insertImage(welEditable, resp.url);
+                }
+            });
+        }
         $(document).ready(function() {
             $('textarea').summernote({
                 height: 200,
@@ -25,7 +42,10 @@
                     ['insert', ['picture', 'link']]
                     //['table', ['table']], // no table button
                     //['help', ['help']] //no help button
-                ]
+                ],
+                onImageUpload: function(files, editor, welEditable) {
+                    sendFile(files[0],editor,welEditable);
+                }
             });
         });
     </script>

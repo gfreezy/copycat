@@ -6,6 +6,7 @@ import forum.views.root
 import forum.views.pages
 import forum.views.events
 import forum.views.forex
+import forum.views.auth
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse_lazy
 from forum.views.auth import RegisterView, AuthenticationForm
@@ -26,7 +27,7 @@ urlpatterns = patterns(
         },
         name='login'
     ),
-    url(r'^login/(?P<provider>.*?)$', forum.views.users.oauth, name='oauth'),
+    url(r'^login/(?P<provider>.*?)$', forum.views.auth.oauth, name='oauth'),
     url(r'^logout$', 'django.contrib.auth.views.logout_then_login', name='logout'),
     url(r'^password_reset$',
         'django.contrib.auth.views.password_reset',
@@ -87,5 +88,6 @@ urlpatterns = patterns(
     url(r'^forex$', forum.views.forex.ForexView.as_view(), name='forex'),
 
     url(r'^proxy/(?P<url>.*)', forum.views.root.proxy, name='proxy'),
+    url(r'^upload_pic$', forum.views.root.UploadPicView.as_view(), name='upload_pic'),
 
 )

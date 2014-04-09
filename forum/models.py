@@ -1,6 +1,7 @@
 #coding: utf8
 import re
 import os
+import math
 from django.contrib.auth.models import BaseUserManager, AbstractUser
 from django.db import models, transaction, connection
 from django.core.urlresolvers import reverse
@@ -20,7 +21,7 @@ def find_mentions(content):
 
 def filepath(prefix, filename):
     h = str(hash(filename))
-    return os.path.join(prefix, h[-2:], h[-4:-2])
+    return os.path.join(prefix, h[-2:], h[-4:-2], filename)
 
 
 class UserManager(BaseUserManager):
@@ -40,7 +41,6 @@ class UserManager(BaseUserManager):
                               date_joined=now, **extra_fields)
             user.set_password(password)
             user.save(using=self._db)
-            Profile.objects.create(user=user)
         return user
 
     def create_user(self, username, email=None, password=None, **extra_fields):
@@ -61,13 +61,14 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     avatar = EnhancedImageField(
         blank=True,
-        default='user/2014/03/5f050d0cd1b9d93b5db499cd6a70e0bf.jpg',
+        default='default/avatar.png',
         upload_to=lambda _, filename: filepath('user', filename),
         thumbnails={
             'small': dict(size=(48, 48), sharpen=True),
             'medium': dict(size=(73, 73), sharpen=True),
         }
     )
+    gold = models.IntegerField(default=2000, help_text='gold')
     profile = models.TextField(blank=True, help_text='user profile')
     n_favourites = models.IntegerField(default=0, editable=False, help_text='topic favourites')
     n_followings = models.IntegerField(default=0, editable=False, help_text='user followings')
@@ -105,6 +106,9 @@ class User(AbstractUser):
         if topic._favourite(self):
             self.n_favourites += 1
             self.save()
+            topic_author = topic.author
+            topic_author.gold += 2 * int(math.ceil(math.log10(self.gold + topic.age)))
+            topic_author.save()
             return True
         return False
 
@@ -230,7 +234,7 @@ class Node(models.Model):
     slug = models.SlugField(max_length=20, unique=True)
     desc = models.TextField(blank=True)
     pic = EnhancedImageField(
-        upload_to='node/%Y/%m',
+        upload_to=lambda _, filename: filepath('node', filename),
         blank=True,
         process_source=dict(size=(73, 73), sharpen=True, upscale=True),
     )
@@ -249,8 +253,9 @@ class Node(models.Model):
     @classmethod
     def hot(cls, number=10):
         c = connection.cursor()
-        c.execute('select distinct(node_id) from forum_topic order by id desc limit %s', [number])
-        hot_node_ids = [id for id, in c.fetchall()]
+        c.execute('select node_id, count(id) as c from forum_topic where created >= %s '
+                  'group by node_id order by c desc limit %s', [timezone.now().date(), number])
+        hot_node_ids = [id for id, _ in c.fetchall()]
         return cls.objects.filter(id__in=hot_node_ids)
 
     def get_absolute_url(self):
@@ -281,6 +286,10 @@ class Topic(models.Model):
     def hot(cls, number=10):
         return cls.objects.order_by('-last_active_time')[:number]
 
+    @property
+    def age(self):
+        return (timezone.now() - self.created).days
+
     def hit(self):
         self.n_hits += 1
         self.save()
@@ -296,7 +305,15 @@ class Topic(models.Model):
             self.last_active_time = reply.created
             self.save()
 
+            # A的话题被B首次回复，A的金币加 2∗log10(B的金币值+帖子发表距今的天数)
+            if Reply.objects.filter(topic=self, author=author).count() == 1:
+                topic_author = self.author
+                topic_author.gold += 2 * int(math.ceil(math.log10(author.gold+self.age)))
+                topic_author.save()
+
             author.update_active_time()
+            author.gold -= 2
+            author.save()
 
             if self.author != author:
                 # Not create notification for self's reply
@@ -505,14 +522,15 @@ class Blog(models.Model):
     content = models.TextField()
     cover = EnhancedImageField(
         upload_to=lambda _, filename: filepath('user', filename),
-        default='user/2014/03/5f050d0cd1b9d93b5db499cd6a70e0bf.jpg',
+        blank=True,
+        # default='user/2014/03/5f050d0cd1b9d93b5db499cd6a70e0bf.jpg',
         process_source=dict(size=(733, 412), sharpen=True),
         thumbnails={
             'strip': dict(size=(733, 231), sharpen=True, upscale=True),
             'thumb': dict(size=(550, 412), sharpen=True, upscale=True),
         }
     )
-    n_comments = models.IntegerField(default=0, editable=False)
+    n_comments = models.IntegerField(default=0, editable=False, db_index=True)
     n_hits = models.IntegerField(default=0, editable=False)
 
     author = models.ForeignKey(User)
@@ -528,6 +546,14 @@ class Blog(models.Model):
     def sticks(cls):
         blog_ids = StickBlog.objects.order_by('-id')[:10].values_list('blog_id')
         return cls.objects.filter(id__in=blog_ids)
+
+    @classmethod
+    def hot(cls, n=8):
+        c = connection.cursor()
+        c.execute('select blog_id, count(id) as c from forum_comment where '
+                  'created > %s group by blog_id order by c desc limit %s', [timezone.now().date(), n])
+        bids = [id for id, _ in c.fetchall()]
+        return cls.objects.filter(id__in=bids)
 
     def hit(self):
         self.n_hits += 1
@@ -631,3 +657,9 @@ class CentralBank(models.Model):
 
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True, auto_now_add=True)
+
+
+class Picture(models.Model):
+    pic = EnhancedImageField(
+        upload_to=lambda _, filename: filepath('pic', filename),
+    )

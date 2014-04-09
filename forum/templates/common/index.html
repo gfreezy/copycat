@@ -36,7 +36,30 @@
             </div>
         </div>
     </div>
-    <div class="span5"></div>
+    <div class="span5">
+        <div class="recent-blogs">
+            {% for b in recent_blogs %}
+            <div class="blog-item">
+                <a href="{{ b.author.get_absolute_url() }}">
+                    <img src="{{ b.author.avatar.small.url }}" alt="{{ b.author.username }}" class="avatar">
+                </a>
+
+                <div class="main">
+                    <h3 class="title">
+                        <a href="{{ b.get_absolute_url() }}">{{ b.title }}</a>
+                    </h3>
+
+                    <div class="meta">
+                        <span class="username">
+                            <a href="{{ b.author.get_absolute_url() }}">{{ b.author.username }}</a>
+                        </span> •
+                        <span>{{ b.created|human_date }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -67,13 +90,13 @@
         </div>
     </div>
 
-    <div class="recent-blogs">
+    <div class="hot-blogs">
         <div class="ui-header sep">
             信息要闻
         </div>
         <div class="ui-content">
             <div class="blogs">
-                {{ blogs_util.blogs(blogs) }}
+                {{ blogs_util.blogs(hot_blogs) }}
             </div>
         </div>
     </div>

@@ -52,7 +52,7 @@
             </span>
 
             <div class="content">
-                <p>{{ reply.content|markdown|content_process|safe }}</p>
+                <p>{{ reply.content|content_process|sanitize }}</p>
             </div>
         </div>
     </div>

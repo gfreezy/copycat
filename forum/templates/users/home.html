@@ -135,21 +135,23 @@
 
 
 {% block sidebar %}
-<div class="p10 white-bg shadow">
-    <div class="ui-header">
-        <span class="title">用户操作</span>
-    </div>
-    <div class="ui-content">
-        <ul>
-            <li class="mb5">
-                <a href="{{ url('user_update', user.username) }}">修改资料</a>
-            </li>
-            <li class="mb5">
-               <a href="{{ url('password_reset') }}">修改密码</a>
-            </li>
+    {% if user.is_authenticated() %}
+    <div class="p10 white-bg shadow">
+        <div class="ui-header">
+            <span class="title">用户操作</span>
+        </div>
+        <div class="ui-content">
+            <ul>
+                <li class="mb5">
+                    <a href="{{ url('user_update', user.username) }}">修改资料</a>
+                </li>
+                <li class="mb5">
+                   <a href="{{ url('password_reset') }}">修改密码</a>
+                </li>
 
-        </ul>
+            </ul>
 
+        </div>
     </div>
-</div>
+    {% endif %}
 {% endblock %}
