@@ -8,6 +8,17 @@
     </div>
 {% endblock %}
 
+{% block javascript %}
+    <script>
+    $(document).ready(function() {
+       $('tr.title').click(function(e) {
+           e.preventDefault();
+           $(this).next().toggle();
+       })
+    });
+    </script>
+{% endblock %}
+
 {% block main %}
 <div class="white-bg p10 shadow events">
 
@@ -50,7 +61,7 @@
         </table>
 
         <p class="f16 pt20 title">外汇事件</p>
-        <table class="w lh200 tr">
+        <table class="w lh200 tr forex">
             <thead>
                 <tr>
                     <th class="time pb10 pt10">时间</th>
@@ -59,10 +70,16 @@
             </thead>
             <tbody>
             {% for e in forex %}
-                <tr>
-                    <td class="time">{{ e.time|datetime('%H:%M') }}</td>
+                <tr class="title">
+                    <td class="time pr30">{{ e.time|datetime('%H:%M') }}</td>
                     <td class="title pr30">
-                        <a href="{{ e.url }}" target="_blank">{{ e.title }}</a>
+                        <a href="javascript:void(0)">{{ e.title }}</a>
+                    </td>
+                </tr>
+                <tr class="article">
+                    <td></td>
+                    <td class="pr30 pl30">
+                        <div class="tl">{{ e.article|content_process|sanitize }}</div>
                     </td>
                 </tr>
             {% endfor %}

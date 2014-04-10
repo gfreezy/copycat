@@ -521,7 +521,7 @@ class Blog(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     cover = EnhancedImageField(
-        upload_to=lambda _, filename: filepath('user', filename),
+        upload_to=lambda _, filename: filepath('blog', filename),
         blank=True,
         # default='user/2014/03/5f050d0cd1b9d93b5db499cd6a70e0bf.jpg',
         process_source=dict(size=(733, 412), sharpen=True),
@@ -554,6 +554,9 @@ class Blog(models.Model):
                   'created > %s group by blog_id order by c desc limit %s', [timezone.now().date(), n])
         bids = [id for id, _ in c.fetchall()]
         return cls.objects.filter(id__in=bids)
+
+    def __unicode__(self):
+        return u'%s %s\t%s' % (self.id, self.created.strftime('%m-%d %H:%M'), self.title)
 
     def hit(self):
         self.n_hits += 1
@@ -640,6 +643,7 @@ class ImportEvent(models.Model):
 class Forex(models.Model):
     time = models.DateTimeField()
     title = models.CharField(max_length=20)
+    article = models.TextField(blank=True)
     url = models.URLField()
     ident = models.CharField(unique=True, max_length=32)
 

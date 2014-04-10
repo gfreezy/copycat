@@ -52,6 +52,13 @@ a {
     border: none;
     box-shadow: none;
     padding: 46px 0 30px;
+    .brand {
+      padding: 0;
+      margin: 0;
+    }
+    .nav {
+      margin-top: 15px;
+    }
     .nav a {
       padding: 5px 15px;
     }
@@ -542,6 +549,20 @@ a {
   tbody tr {
     font-size: 12px;
     border-bottom: 1px solid #ccc;
+  }
+}
+
+.forex {
+  .time {
+    padding: 0 30px;
+    width: 100px;
+  }
+  .article {
+    display: none;
+    line-height: 1.8;
+    &:hover {
+      background-color: transparent;
+    }
   }
 }
 
@@ -1308,7 +1329,7 @@ input[type="color"],
 }
 
 .recent-blogs {
-  width: 494px;
+  width: 492px;
   float: right;
   .blog-item {
     &:hover {

@@ -37,8 +37,10 @@ def parse_row(row):
     link = row.find('a')
     title = link.string
     url = link['href']
+    url = urlparse.urljoin(HOST, url)
     time = row.select('.timestamp')[0].string
-    return time, title, url
+    article = fetch_full_article(url)
+    return time, title, url, article
 
 
 def parse_time(t):
@@ -54,14 +56,27 @@ def parse_time(t):
                              time.hour, time.minute, tzinfo=pytz.timezone('Asia/Shanghai'))
 
 
-def create(time, title, url):
+def fetch_full_article(url):
+    url += '?sp=true'
+    req = requests.get(url)
+    req.encoding = 'utf8'
+    bs = BeautifulSoup(req.text)
+    paras = bs.select('#resizeableText .focusParagraph')
+    paras_str = filter(None, [''.join(p.stripped_strings).strip() for p in paras])
+    article = '\n'.join(paras_str)
+    index = article.find(u'（完）')
+    if index == -1:
+        return article
+    return article[:index]
+
+
+def create(time, title, url, article):
     ident = md5((title+url).encode('utf8')).hexdigest()
     if Forex.objects.filter(ident=ident).exists():
         return
-    url = urlparse.urljoin(HOST, url)
     t_ = parse_time(time)
     ec = Forex.objects.create(
-        time=t_, title=title, url=url, ident=ident
+        time=t_, title=title, url=url, ident=ident, article=article,
     )
     return ec
 

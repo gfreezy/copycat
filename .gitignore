@@ -4,8 +4,9 @@
 media/user
 media/node
 media/image
+media/pic
+media/blog
+
 .sass-cache/
 
 static/css/main.css
-
-media/pic
