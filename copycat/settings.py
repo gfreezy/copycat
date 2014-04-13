@@ -171,6 +171,8 @@ AUTH_USER_MODEL = 'forum.User'
 CRON_CLASSES = [
     'forum.tasks.economic_events.EconomicEventsJob',
     'forum.tasks.forex.EconomicEventsJob',
+    'forum.tasks.central_bank.CentralBankJob',
+    'forum.tasks.important_events.EconomicEventsJob',
 ]
 
 SOCIALOAUTH_SITES = (
