@@ -3,6 +3,11 @@
 
 {% block header_left %}
     <div class="title">
+        {% if user.is_superuser %}
+        <span class="fr f12">
+            <a class="btn btn-small" type="button" href="{{ url('new_blog') }}">创建</a>
+        </span>
+        {% endif %}
         <div class="bread-nav">
             <a href="{{ url('index') }}">首页</a> › 信息要闻
         </div>

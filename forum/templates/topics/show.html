@@ -128,6 +128,9 @@
             {% if topic.created_by(user) %}
             <a href="{{ url('topic_edit', topic.id) }}" class="fr ml15">编辑主题</a>
             {% endif %}
+            {% if topic.created_by(user) or user.is_superuser %}
+            <a href="{{ url('topic_delete', topic.id) }}" class="fr ml15">删除主题</a>
+            {% endif %}
         {% endif %}
 
         <div class="favourites fr ml15">{{ topic.n_favourites }} 人收藏</div>
@@ -157,6 +160,9 @@
                     </a>
                     <span class="time">{{ reply.created|human_date }}</span>
                     <div class="fr">
+                        {% if reply.author == user or user.is_superuser %}
+                        <a href="{{ url('topic_delete_reply', topic.id) }}?delete_reply_id={{ reply.id }}">删除</a>
+                        {% endif %}
                         <span class="reply-to J_replyTo" data-username="{{ reply.author.username }}">
                             <img src="/static/images/reply.png" alt=""/>
                         </span>

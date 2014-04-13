@@ -1,0 +1,21 @@
+{% extends 'common/content_layout.html' %}
+
+{% block header_left %}
+    <div class="title">
+        <div class="bread-nav">
+            <a href="{{ url('index') }}">首页</a> › <a href="{{ url('blog_list') }}">信息要闻</a> › 创建新主题
+        </div>
+    </div>
+{% endblock %}
+
+{% block main %}
+<div class="topic-create">
+        <form class="mt10" action="" method="post" enctype="multipart/form-data">
+            {{ form.cover }}<br><br>
+            <input class="input-xxlarge" id="prependedInput" type="text" placeholder="主题" name="title" value="{{ form.title.value() }}">
+            <textarea id="summernote" rows="3" placeholder="正文" name="content">{{ form.content.value() }}</textarea>
+            <input type="submit" id="checkall" class="btn btn-small mt10" value="立即创建">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
+        </form>
+</div>
+{% endblock %}

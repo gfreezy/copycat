@@ -97,22 +97,22 @@ def human_date(t):
         if second_diff < 10:
             return u"刚刚"
         if second_diff < 60:
-            return unicode(second_diff) + u"秒前"
+            return unicode(second_diff) + u" 秒前"
         if second_diff < 120:
-            return u"1分钟前"
+            return u"1 分钟前"
         if second_diff < 3600:
-            return unicode(second_diff / 60) + u"分钟前"
+            return unicode(second_diff / 60) + u" 分钟前"
         if second_diff < 7200:
-            return u"1小时前"
+            return u"1 小时前"
         if second_diff < 86400:
-            return unicode(second_diff / 3600) + u"小时前"
+            return unicode(second_diff / 3600) + u" 小时前"
     if day_diff == 1:
         return u"昨天"
     if day_diff < 31:
-        return unicode(day_diff) + u"天前"
+        return unicode(day_diff) + u" 天前"
     if day_diff < 365:
-        return unicode(day_diff/30) + u"个月前"
-    return unicode(day_diff/365) + u"年前"
+        return unicode(day_diff/30) + u" 个月前"
+    return unicode(day_diff/365) + u" 年前"
 
 
 def gen_page_list(current_page=1, total_page=1, list_rows=10):

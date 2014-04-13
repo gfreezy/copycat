@@ -53,6 +53,8 @@ urlpatterns = patterns(
     url(r'^list/topics', forum.views.topics.TopicListView.as_view(), name='topic_list'),
     url(r'^t/(?P<id>\d+)$', forum.views.topics.show, name='topic'),
     url(r'^t/(?P<id>\d+)/edit$', forum.views.topics.EditView.as_view(), name='topic_edit'),
+    url(r'^t/(?P<id>\d+)/delete$', forum.views.topics.DeleteTopicView.as_view(), name='topic_delete'),
+    url(r'^t/(?P<id>\d+)/delete_reply$', forum.views.topics.DeleteTopicReplyView.as_view(), name='topic_delete_reply'),
     url(r'^favourite/(?P<id>\d+)$', forum.views.topics.FavouriteView.as_view(), name='topic_favourite'),
     url(r'^unfavourite/(?P<id>\d+)$', forum.views.topics.UnfavouriteView.as_view(), name='topic_unfavourite'),
     url(r'^reply/(?P<id>\d+)$', forum.views.topics.reply, name='reply'),
@@ -78,10 +80,14 @@ urlpatterns = patterns(
 
     # blog
     url(r'^blog/(?P<id>\d+)$', forum.views.blogs.BlogView.as_view(), name='blog'),
+    url(r'^blog/(?P<id>\d+)/delete$', forum.views.blogs.DeleteBlogView.as_view(), name='blog_delete'),
+    url(r'^blog/(?P<id>\d+)/edit$', forum.views.blogs.UpdateBlogView.as_view(), name='blog_edit'),
     url(r'^blog/(?P<id>\d+)/comment$', forum.views.blogs.comment, name='comment'),
     url(r'^blog/list$', forum.views.blogs.BlogListView.as_view(), name='blog_list'),
     url(r'^stick/(?P<id>\w+)$', forum.views.blogs.StickView.as_view(), name='blog_stick'),
     url(r'^unstick/(?P<id>\w+)$', forum.views.blogs.UnstickView.as_view(), name='blog_unstick'),
+    url(r'^blog/(?P<id>\d+)/delete_comment$', forum.views.blogs.DeleteCommentView.as_view(), name='blog_delete_comment'),
+    url(r'^blogs/new$', forum.views.blogs.NewBlogView.as_view(), name='new_blog'),
 
     # other
     url(r'^events$', forum.views.events.EventsView.as_view(), name='events'),

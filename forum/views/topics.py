@@ -7,7 +7,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import CreateView, UpdateView
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.base import View, TemplateView
 from forum.models import Topic, Node, Plane, User, Reply
 from braces.views import LoginRequiredMixin, JSONResponseMixin
@@ -162,8 +163,34 @@ class EditView(LoginRequiredMixin, UpdateView):
 
         return super(EditView, self).form_valid(form)
 
-    def get_object(self, queryset=Node):
+    def get_object(self, queryset=None):
         topic = get_object_or_404(Topic, pk=self.kwargs['id'])
         if topic.author != self.request.user and not self.request.user.is_superuser:
             raise exceptions.PermissionDenied
         return topic
+
+
+class DeleteTopicView(LoginRequiredMixin, DeleteView):
+    template_name = 'common/delete.html'
+    model = Topic
+    success_url = reverse_lazy('index')
+
+    def get_object(self, queryset=None):
+        topic = get_object_or_404(Topic, pk=self.kwargs['id'])
+        if topic.author != self.request.user and not self.request.user.is_superuser:
+            raise exceptions.PermissionDenied
+        return topic
+
+
+class DeleteTopicReplyView(LoginRequiredMixin, DeleteView):
+    template_name = 'common/delete.html'
+
+    def get_object(self, queryset=None):
+        reply_id = self.request.GET.get('delete_reply_id')
+        reply = get_object_or_404(Reply, pk=reply_id)
+        if reply.author != self.request.user and not self.request.user.is_superuser:
+            raise exceptions.PermissionDenied
+        return reply
+
+    def get_success_url(self):
+        return self.object.topic.get_absolute_url()

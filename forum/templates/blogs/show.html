@@ -106,7 +106,7 @@
         <div class="cover">
             <img src="{{ blog.cover.url }}" width="648">
         </div>
-        {{ blog.content|markdown|content_process|safe }}
+        {{ blog.content|content_process|sanitize }}
     </div>
     <div class="ui-footer">
         <a href="#" class="mr15"
@@ -128,7 +128,10 @@
         {% endif %}
 
         {% if blog.created_by(user) %}
-        <a href="/t/edit/{{ blog.id }}" class="fr ml15">编辑</a>
+        <a href="{{ url('blog_edit', blog.id) }}" class="fr ml15">编辑</a>
+        {% endif %}
+        {% if blog.created_by(user) or user.is_superuser%}
+        <a href="{{ url('blog_delete', blog.id) }}" class="fr ml15">删除</a>
         {% endif %}
         <span class="hits fr">{{ blog.n_hits }} 次点击</span>
     </div>
@@ -156,6 +159,9 @@
                     </a>
                     <span class="time">{{ comment.created|human_date }}</span>
                     <div class="fr">
+                        {% if comment.author == user or comment.author.is_superuser %}
+                            <a href="{{ url('blog_delete_comment', blog.id) }}?delete_comment_id={{ comment.id }}">删除</a>
+                        {% endif %}
                         <span class="reply-to J_replyTo" data-username="{{ comment.author.username }}">
                             <img src="/static/images/reply.png" alt=""/>
                         </span>

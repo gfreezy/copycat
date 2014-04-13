@@ -1,0 +1,8 @@
+{% extends 'common/layout.html' %}
+
+{% block main %}
+    <form action="" method="post">{{ csrf() }}
+        <p class="f16 mb20">真的要删除吗？</p>
+        <input type="submit" value="删除"  class="btn btn-warning"/>
+</form>
+{% endblock %}
